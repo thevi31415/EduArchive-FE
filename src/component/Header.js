@@ -60,43 +60,60 @@ const Header = () => {
       <nav className="flex justify-between items-center ">
         <ul className="flex space-x-4">
           <li className="relative group">
-            <a href="/" className="text-gray-800 hover:text-brand-green">
+            <a
+              href="/"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
               Trang chủ
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
+          </li>
+          <li className="relative group">
+            <a
+              href="/blog"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
+              Bài viết
+            </a>
           </li>
           <li className="relative group">
             <a
               href="/document"
-              className="text-gray-800 hover:text-brand-green"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
             >
               Tài liệu
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
           </li>
           <li className="relative group">
-            <a href="/exam" className="text-gray-800 hover:text-brand-green">
+            <a
+              href="/exam"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
               Đề thi
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
           </li>
           <li className="relative group">
-            <a href="/project" className="text-gray-800 hover:text-brand-green">
+            <a
+              href="/project"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
               Đồ án
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
           </li>
           <li className="relative group">
-            <a href="/subject" className="text-gray-800 hover:text-brand-green">
+            <a
+              href="/subject"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
               Môn học
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
           </li>
           <li className="relative group">
-            <a href="/login" className="text-gray-800 hover:text-brand-green">
+            <a
+              href="/login"
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
               Đăng nhập
             </a>
-            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-brand-green scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out"></span>
           </li>
         </ul>
         <button className="text-black duration-200 ease-in-out hover:text-brand-green">

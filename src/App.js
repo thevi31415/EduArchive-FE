@@ -11,6 +11,7 @@ import Project from "./pages/Project";
 import Subject from "./pages/Subject";
 import Login from "./pages/Login";
 import Footer from "./component/Footer";
+import Blog from "./pages/Blog";
 function App() {
   return (
     <body
@@ -31,6 +32,8 @@ function App() {
         <section className="relative mx-auto w-full max-w-8xl">
           <Routes>
             <Route path="/" element={<Home />}></Route>
+            <Route path="/blog" element={<Blog />}></Route>
+
             <Route path="/document" element={<Document />}></Route>
             <Route path="/exam" element={<Exam />}></Route>
             <Route path="/project" element={<Project />}></Route>
