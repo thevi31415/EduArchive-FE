@@ -55,7 +55,10 @@ function DocumentDetail() {
             paddingLeft: "8vw", // Cố định khoảng cách bên trái của phần tử con
           }}
         >
-          <div className="p-9">
+          <div
+            className="p-9"
+            style={{ marginTop: "30px", marginBottom: "30px" }}
+          >
             <h1 className="text-4xl font-bold text-white mb-4">
               {document.title}
             </h1>
