@@ -72,7 +72,7 @@ function App() {
           crossorigin="anonymous"
           referrerpolicy="no-referrer"
         />
-        <header className="mx-auto flex max-w-8xl flex-col px-4">
+        <header className="mx-auto flex max-w-8xl flex-col px-5">
           <Header />
         </header>
         <main className="relative mx-auto max-w-8xl px-15 lg:flex lg:flex-wrap lg:gap-x-8 lg:ml-70 lg:mr-70">

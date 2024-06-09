@@ -22,26 +22,59 @@ function Document() {
   }, []);
 
   return (
-    <div style={{ margin: 20, marginLeft: 60, marginRight: 60 }}>
-      <h1 className="text-3xl font-bold underline bg-gray-50">Document</h1>
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <ClipLoader color={"#60B557"} loading={loading} size={100} />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-          {documents.map((document) => (
-            <div key={document.id}>
-              <Link to={`/document/${document.id}`}>
-                {" "}
-                <DocumentCard document={document} />
-              </Link>
+    <>
+      <nav
+        className="flex rounded-lg bg-green-100 p-4 w-full"
+        aria-label="Breadcrumb"
+      >
+        <ol className="flex items-center space-x-4 text-green-500">
+          <li>
+            <a href="#" className="hover:underline">
+              Trang chủ
+            </a>
+          </li>
+          <li>
+            <span>/</span>
+          </li>
+
+          <li>
+            <span className="font-bold">Tài liệu</span>
+          </li>
+        </ol>
+      </nav>
+      <div style={{ margin: 20, marginLeft: 60, marginRight: 60 }}>
+        <h1 className="text-3xl font-bold underline bg-gray-50">Document</h1>
+        <div style={{ position: "relative" }}>
+          {loading && (
+            <div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "rgba(255, 255, 255, 0.5)", // Màu mờ
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999, // Đảm bảo lớp mờ nằm phía trên
+              }}
+            >
+              <ClipLoader color={"#60B557"} loading={loading} size={100} />
             </div>
-          ))}
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+            {documents.map((document) => (
+              <div key={document.id}>
+                <Link to={`/document/${document.id}`}>
+                  {" "}
+                  <DocumentCard document={document} />
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      )}
-      <h1>Length: {documents.length}</h1>
-    </div>
+      </div>
+    </>
   );
 }
 
