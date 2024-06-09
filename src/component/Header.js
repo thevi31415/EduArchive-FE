@@ -4,24 +4,11 @@ const Header = () => {
   return (
     <div className=" py-8 md:py-10">
       <div className="space-between mb-0 flex items-center xl:mb-6">
-        {/* <Link
-          className="block min-w-[200px] max-w-[318px] grow"
-          data-ga-click=""
-          data-ga-element="nav-logo"
-          data-ga-action="nav-logo"
-          data-ga-item="logo"
-          href="https://lifehacker.com"
-        >
-          <img
-            src="https://lifehacker.com/images/lifehacker-logo.svg"
-            alt="Lifehacker Logo"
-            width="318"
-            height="100"
-          />
-        </Link> */}
-
         <div class="inline-flex gap-1.5 text-sm mb-5">
-          <span class="font-medium text-gray-900" style={{ fontSize: "30px" }}>
+          <span
+            class="font-mediu"
+            style={{ fontSize: "30px", color: "#00FBA3", fontWeight: "bold" }}
+          >
             EduArchive
           </span>
           <span aria-hidden="true" role="img" style={{ fontSize: "30px" }}>

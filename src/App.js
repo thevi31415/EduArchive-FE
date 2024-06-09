@@ -13,12 +13,10 @@ import Login from "./pages/Login";
 import Footer from "./component/Footer";
 import Blog from "./pages/Blog";
 import UserDetail from "./pages/UserDetail";
+import DocumentDetail from "./pages/DocumentDetail";
 function App() {
   return (
-    <body
-      className="max-w-screen font-sans leading-normal text-black lg:text-base "
-      style={{ marginLeft: 20, marginRight: 20 }}
-    >
+    <body className="max-w-screen font-sans leading-normal text-black lg:text-base ">
       <div>
         <link
           rel="stylesheet"
@@ -41,6 +39,7 @@ function App() {
             <Route path="/subject" element={<Subject />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/user/:userId" element={<UserDetail />} />
+            <Route path="/document/:documentId" element={<DocumentDetail />} />
           </Routes>
         </section>
         <Footer />
