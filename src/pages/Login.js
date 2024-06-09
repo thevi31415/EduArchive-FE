@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Login = () => {
@@ -9,7 +8,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [userData, setUserData] = useState(null);
+  const [token, setToKen] = useState(null);
+  useEffect(() => {
+    if (token) {
+      sessionStorage.setItem("Token", token);
+    }
+  }, [token]);
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -36,7 +40,8 @@ const Login = () => {
       // setUser(data[0].data);
       setSuccessMessage("Login successful!");
       // Do something with the data if needed
-      setUserData(data.data); //
+      setToKen(data.data); //
+      sessionStorage.setItem("Token", token);
     } catch (error) {
       console.error("Error logging in:", error);
       setError("Failed to login. Please check your credentials.");
@@ -70,13 +75,9 @@ const Login = () => {
         <button type="submit" disabled={loading}>
           Login
         </button>
-        {userData && (
+        {token && (
           <div>
-            <h3>User Information</h3>
-            <p>ID: {userData.id}</p>
-            <p>Name: {userData.name}</p>
-            <p>Email: {userData.email}</p>
-            {/* Add other user data fields as needed */}
+            <h3>Token: {token}</h3>
           </div>
         )}
       </form>

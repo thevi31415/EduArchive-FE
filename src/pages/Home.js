@@ -4,18 +4,33 @@ import { useState, useEffect } from "react";
 
 function Home() {
   const [users, setUser] = useState([]);
-
+  const token = sessionStorage.getItem("Token");
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/user`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/user`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
         setUser(data.data);
         console.log(data);
-      });
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    };
+
+    fetchUsers();
   }, []);
   return (
     <div>
