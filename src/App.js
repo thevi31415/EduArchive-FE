@@ -12,6 +12,7 @@ import Subject from "./pages/Subject";
 import Login from "./pages/Login";
 import Footer from "./component/Footer";
 import Blog from "./pages/Blog";
+import UserDetail from "./pages/UserDetail";
 function App() {
   return (
     <body
@@ -39,6 +40,7 @@ function App() {
             <Route path="/project" element={<Project />}></Route>
             <Route path="/subject" element={<Subject />}></Route>
             <Route path="/login" element={<Login />}></Route>
+            <Route path="/user/:userId" element={<UserDetail />} />
           </Routes>
         </section>
         <Footer />
