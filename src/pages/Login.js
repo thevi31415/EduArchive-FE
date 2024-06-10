@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,22 +35,33 @@ const Login = () => {
 
       if (!response.ok) {
         throw new Error("Failed to login");
+        showToastMessage2();
       }
-
+      // toast.success("Success Notification !", {
+      //   position: toast.POSITION.TOP_RIGHT,
+      // });
       const data = await response.json();
       // setUser(data[0].data);
       setSuccessMessage("Login successful!");
       // Do something with the data if needed
       setToKen(data.data); //
       localStorage.setItem("Token", token);
+      showToastMessage();
     } catch (error) {
+      showToastMessage2();
+
       console.error("Error logging in:", error);
       setError("Failed to login. Please check your credentials.");
     } finally {
       setLoading(false);
     }
   };
-
+  const showToastMessage = () => {
+    toast.success("Đăng nhập thành công !");
+  };
+  const showToastMessage2 = () => {
+    toast.error("Không thể đăng nhập !");
+  };
   return (
     <div>
       <h2>Login</h2>
@@ -81,6 +93,8 @@ const Login = () => {
           </div>
         )}
       </form>
+      {/* <button onClick={showToastMessage}>Notify</button> */}
+      <ToastContainer />
     </div>
   );
 };
