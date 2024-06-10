@@ -72,11 +72,17 @@ const Login = () => {
     toast.error("Không thể đăng nhập !");
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className=" flex items-center justify-center bg-gray-50 py-20 px-5 sm:px-6 lg:px-8">
+      <div
+        className="max-w-md  space-y-8"
+        style={{ width: "70%", margin: "20px" }}
+      >
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Log in to your account
+          <h2
+            className="mt-6 text-center text-3xl font-extrabold"
+            style={{ color: "#02FBA3" }}
+          >
+            Đăng nhập
           </h2>
           {error && (
             <p className="mt-2 text-center text-sm text-red-600">{error}</p>
@@ -90,9 +96,9 @@ const Login = () => {
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
-            <div>
+            <div style={{ marginBottom: "20px" }}>
               <label htmlFor="email-address" className="sr-only">
-                Email address
+                Địa chỉ Email
               </label>
               <input
                 id="email-address"
@@ -100,15 +106,15 @@ const Login = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                placeholder="Địa chỉ Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                Password
+                Mật khẩu
               </label>
               <input
                 id="password"
@@ -116,15 +122,15 @@ const Login = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
+                placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
                 id="remember-me"
@@ -148,30 +154,18 @@ const Login = () => {
                 Forgot your password?
               </a>
             </div>
-          </div>
+          </div> */}
 
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center items-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <svg
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 0C4.477 0 0 4.477 0 10c0 5.523 4.477 10 10 10 5.523 0 10-4.477 10-10C20 4.477 15.523 0 10 0zm-.707 17.707a1 1 0 01-1.414-1.414L12.586 10 8.293 5.707a1 1 0 111.414-1.414L15.414 9l.001.001a1 1 0 010 1.414l-6.417 6.416z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+              <span className="flex items-center space-x-2">
+                <i className="fa-solid fa-right-to-bracket fa-lg"></i>
+                <span>Đăng nhập</span>
               </span>
-              Sign in
             </button>
           </div>
         </form>

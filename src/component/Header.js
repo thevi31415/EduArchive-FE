@@ -124,10 +124,10 @@ const Header = () => {
             </button>
           </div>
         ) : (
-          <button className="text-black duration-200 ease-in-out hover:text-brand-green">
+          <button className="text-black duration-200 ease-in-out hover:text-brand-green rounded-md shadow">
             <a
               href="/login"
-              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+              className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-600 md:py-2 md:text-lg md:px-5"
             >
               Đăng nhập
             </a>
