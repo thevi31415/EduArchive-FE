@@ -48,7 +48,7 @@ function Home() {
       <h1 className="text-3xl font-bold underline bg-gray-50">Trang chủ</h1>
       {users.map((user) => (
         <div key={user.id}>
-          <Link to={`/user/${user.id}`}>{user.userName}</Link>
+          <Link to={`/user/${user.userName}`}>{user.userName}</Link>
         </div>
       ))}
       <div>
