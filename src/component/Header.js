@@ -1,6 +1,24 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { Link } from "react-router-dom";
 const Header = () => {
+  const [users, setUser] = useState([]);
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    const savedToken = localStorage.getItem("Token");
+    const savedUser = localStorage.getItem("User");
+
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem("Token");
+    localStorage.removeItem("User");
+    setToken(null);
+    setUser(null);
+  };
   return (
     <div className=" py-8 md:py-10">
       <div className="space-between mb-0 flex items-center xl:mb-6">
@@ -94,18 +112,27 @@ const Header = () => {
               Môn học
             </a>
           </li>
-          <li className="relative group">
+        </ul>
+        {token && users ? (
+          <div>
+            <span className="mr-4">Xin chào! {users.name}</span>
+            <button
+              onClick={handleLogout}
+              className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
+            >
+              Đăng xuất
+            </button>
+          </div>
+        ) : (
+          <button className="text-black duration-200 ease-in-out hover:text-brand-green">
             <a
               href="/login"
               className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
             >
               Đăng nhập
             </a>
-          </li>
-        </ul>
-        <button className="text-black duration-200 ease-in-out hover:text-brand-green">
-          <h1>Xin chào! Nguyễn Dương Thế Vĩ</h1>
-        </button>
+          </button>
+        )}
       </nav>
     </div>
   );
