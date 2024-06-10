@@ -23,10 +23,7 @@ function Document() {
 
   return (
     <>
-      <nav
-        className="flex rounded-lg bg-green-100 p-4 w-full"
-        aria-label="Breadcrumb"
-      >
+      <nav className="flex  bg-green-100 p-4 w-full" aria-label="Breadcrumb">
         <ol className="flex items-center space-x-4 text-green-500">
           <li>
             <a href="#" className="hover:underline">
