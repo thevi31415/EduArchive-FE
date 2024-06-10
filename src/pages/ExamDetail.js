@@ -6,7 +6,6 @@ function ExamDetail() {
   const { examId } = useParams();
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [pdfUrl, setPDF] = useState("");
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [viewerUrl, setViewerUrl] = useState("");
   const getFileExtension = (url) => {
@@ -18,23 +17,24 @@ function ExamDetail() {
       .then((res) => res.json())
       .then((data) => {
         setDocument(data.data);
-        setPDF(data.data.linkDownload);
-        const fileExtension = getFileExtension(pdfUrl);
+        const linkDownload = data.data.linkDownload;
+        const fileExtension = linkDownload.split(".").pop().toLowerCase();
         if (fileExtension === "pdf") {
-          setViewerUrl(pdfUrl);
-        } else if (fileExtension === "docx") {
+          setViewerUrl(linkDownload);
+        } else if (fileExtension === "docx" || fileExtension === "doc") {
           setViewerUrl(
             `https://docs.google.com/gview?url=${encodeURIComponent(
-              pdfUrl
+              linkDownload
             )}&embedded=true`
           );
+        } else {
+          console.error("Unsupported file type");
         }
         setLoading(false); // Kết thúc loading khi dữ liệu được load xong
       });
   }, [examId]);
 
   if (loading) {
-    // Nếu đang loading, hiển thị hiệu ứng xoay tròn
     return (
       <div
         style={{
@@ -145,12 +145,11 @@ function ExamDetail() {
             <div style={{ width: "full", marginTop: "20px" }}>
               <img src={document.image} alt="Document" className="rounded-lg" />
             </div>
-            <div>
-              <h1>Document Viewer</h1>
+            <div style={{ marginTop: "20px" }}>
               <iframe
-                src={pdfUrl}
+                src={viewerUrl}
                 width="100%"
-                height="600px"
+                height="800px"
                 title="Document Viewer"
               >
                 Your browser does not support iframes.
