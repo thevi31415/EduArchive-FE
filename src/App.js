@@ -14,6 +14,7 @@ import Footer from "./component/Footer";
 import Blog from "./pages/Blog";
 import UserDetail from "./pages/UserDetail";
 import DocumentDetail from "./pages/DocumentDetail";
+import ExamDetail from "./pages/ExamDetail";
 
 function App() {
   return (
@@ -87,6 +88,7 @@ function App() {
             <Route path="/login" element={<Login />}></Route>
             <Route path="/user/:userId" element={<UserDetail />} />
             <Route path="/document/:documentId" element={<DocumentDetail />} />
+            <Route path="/exam/:examId" element={<ExamDetail />} />
           </Routes>
         </main>
 

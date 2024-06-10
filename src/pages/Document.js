@@ -9,7 +9,7 @@ function Document() {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/document`)
+    fetch(`${API_BASE_URL}/api/document/ByType/TaiLieu`)
       .then((res) => res.json())
       .then((data) => {
         setDocuments(data.data);

@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
-function DocumentDetail() {
-  const { documentId } = useParams();
+function ExamDetail() {
+  const { examId } = useParams();
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true); // Thêm state để kiểm tra xem đang load hay không
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     setLoading(true); // Bắt đầu loading khi useEffect được gọi
-    fetch(`${API_BASE_URL}/api/Document/ById/${documentId}`)
+    fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
       .then((res) => res.json())
       .then((data) => {
         setDocument(data.data);
         setLoading(false); // Kết thúc loading khi dữ liệu được load xong
       });
-  }, [documentId]);
+  }, [examId]);
 
   if (loading) {
     // Nếu đang loading, hiển thị hiệu ứng xoay tròn
@@ -58,7 +58,7 @@ function DocumentDetail() {
           </li>
           <li>
             <a href="#" className="hover:underline">
-              Tài liệu
+              Đề thi
             </a>
           </li>
           <li>
@@ -210,4 +210,4 @@ function DocumentDetail() {
   );
 }
 
-export default DocumentDetail;
+export default ExamDetail;
