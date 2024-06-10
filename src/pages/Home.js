@@ -6,12 +6,15 @@ function Home() {
   const [users, setUser] = useState([]);
   const [token, setToken] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const [users2, setUser2] = useState(null);
 
   useEffect(() => {
     // Retrieve the token from session storage
     const storedToken = localStorage.getItem("Token");
-    setToken(storedToken);
+    const user = localStorage.getItem("User");
 
+    setToken(storedToken);
+    setUser2(JSON.parse(user));
     const fetchUsers = async (authToken) => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/user`, {
@@ -50,6 +53,7 @@ function Home() {
       ))}
       <div>
         <h2>User Profile upate: {token}</h2>
+        <h1>{users2?.name}</h1>
       </div>
     </div>
   );

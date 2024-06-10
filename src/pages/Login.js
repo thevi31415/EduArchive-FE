@@ -10,11 +10,17 @@ const Login = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [token, setToKen] = useState(null);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     if (token) {
       localStorage.setItem("Token", token);
     }
   }, [token]);
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("User", JSON.stringify(user));
+    }
+  }, [user]);
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -44,7 +50,8 @@ const Login = () => {
       // setUser(data[0].data);
       setSuccessMessage("Login successful!");
       // Do something with the data if needed
-      setToKen(data.data); //
+      setToKen(data.data.token); //
+      setUser(data.data.user);
       localStorage.setItem("Token", token);
       showToastMessage();
     } catch (error) {
