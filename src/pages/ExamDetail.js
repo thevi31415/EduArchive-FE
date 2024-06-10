@@ -5,15 +5,30 @@ import { ClipLoader } from "react-spinners";
 function ExamDetail() {
   const { examId } = useParams();
   const [document, setDocument] = useState(null);
-  const [loading, setLoading] = useState(true); // Thêm state để kiểm tra xem đang load hay không
+  const [loading, setLoading] = useState(true);
+  const [pdfUrl, setPDF] = useState("");
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+  const [viewerUrl, setViewerUrl] = useState("");
+  const getFileExtension = (url) => {
+    return url.split(".").pop().toLowerCase();
+  };
   useEffect(() => {
     setLoading(true); // Bắt đầu loading khi useEffect được gọi
     fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
       .then((res) => res.json())
       .then((data) => {
         setDocument(data.data);
+        setPDF(data.data.linkDownload);
+        const fileExtension = getFileExtension(pdfUrl);
+        if (fileExtension === "pdf") {
+          setViewerUrl(pdfUrl);
+        } else if (fileExtension === "docx") {
+          setViewerUrl(
+            `https://docs.google.com/gview?url=${encodeURIComponent(
+              pdfUrl
+            )}&embedded=true`
+          );
+        }
         setLoading(false); // Kết thúc loading khi dữ liệu được load xong
       });
   }, [examId]);
@@ -129,6 +144,17 @@ function ExamDetail() {
 
             <div style={{ width: "full", marginTop: "20px" }}>
               <img src={document.image} alt="Document" className="rounded-lg" />
+            </div>
+            <div>
+              <h1>Document Viewer</h1>
+              <iframe
+                src={pdfUrl}
+                width="100%"
+                height="600px"
+                title="Document Viewer"
+              >
+                Your browser does not support iframes.
+              </iframe>
             </div>
             <p className="text-gray-600 mb-4 mt-5">{document.description}</p>
             <div className="flex items-center justify-center mt-4">
