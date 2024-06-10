@@ -20,7 +20,7 @@ const Header = () => {
     setUser(null);
   };
   return (
-    <div className=" py-8 md:py-10">
+    <div className=" py-8 md:py-10 ">
       <div className="space-between mb-0 flex items-center xl:mb-6">
         <div class="inline-flex gap-1.5 text-sm mb-5">
           <span
@@ -32,34 +32,6 @@ const Header = () => {
           <span aria-hidden="true" role="img" style={{ fontSize: "30px" }}>
             ✨
           </span>
-        </div>
-        <div className="flex w-full items-center justify-end ">
-          <ul className="hidden items-center gap-x-4  pr-4 sm:flex">
-            <li>
-              <i
-                class="fa-brands fa-facebook fa-2xl"
-                style={{ color: "#1973EB" }}
-              ></i>
-            </li>
-            <li>
-              <i
-                class="fa-brands fa-youtube fa-2xl"
-                style={{ color: "#FF0000" }}
-              ></i>
-            </li>
-            <li>
-              <i
-                class="fa-brands fa-github fa-2xl"
-                style={{ color: "#1F2329" }}
-              ></i>
-            </li>
-            <li>
-              <i
-                class="fa-brands fa-twitter fa-2xl"
-                style={{ color: "#45A4E1" }}
-              ></i>
-            </li>
-          </ul>
         </div>
       </div>
       <nav className="flex justify-between items-center ">
