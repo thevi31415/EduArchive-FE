@@ -14,6 +14,7 @@ import Footer from "./component/Footer";
 import Blog from "./pages/Blog";
 import UserDetail from "./pages/UserDetail";
 import DocumentDetail from "./pages/DocumentDetail";
+
 function App() {
   return (
     <body className="max-w-screen font-sans leading-normal text-black lg:text-base ">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const Login = () => {
   const [email, setEmail] = useState("");
 
@@ -11,7 +11,7 @@ const Login = () => {
   const [token, setToKen] = useState(null);
   useEffect(() => {
     if (token) {
-      sessionStorage.setItem("Token", token);
+      localStorage.setItem("Token", token);
     }
   }, [token]);
   const handleLogin = async (e) => {
@@ -41,7 +41,7 @@ const Login = () => {
       setSuccessMessage("Login successful!");
       // Do something with the data if needed
       setToKen(data.data); //
-      sessionStorage.setItem("Token", token);
+      localStorage.setItem("Token", token);
     } catch (error) {
       console.error("Error logging in:", error);
       setError("Failed to login. Please check your credentials.");
