@@ -38,22 +38,16 @@ function Exam() {
           </li>
         </ol>
       </nav>
-      <section className="bg-white py-[20px] dark:bg-dark ml-5">
-        <div className="mx-auto px-4 sm:container">
-          <div
-            className="border-l-[5px] border-primary pl-5"
-            style={{ color: "#22C55D" }}
-          >
-            <h2
-              className="mb-2 text-3xl font-semibold text-dark dark:text-white"
-              style={{ color: "#22C55D" }}
-            >
-              Đề thi
+      <section className="bg-white py-[10px] dark:bg-dark ml-5">
+        <div className="px-4 sm:container">
+          <div className="pl-5 border-l-4 border-green-500">
+            <h2 className=" text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">
+              Đề thi ({documents?.length})
             </h2>
           </div>
         </div>
       </section>
-      <div style={{ margin: 20, marginLeft: 60, marginRight: 60 }}>
+      <div style={{ marginLeft: "20px", marginRight: "20px" }}>
         <div style={{ position: "relative" }}>
           {loading && (
             <div
@@ -72,7 +66,7 @@ function Exam() {
               <ClipLoader color={"#60B557"} loading={loading} size={100} />
             </div>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
             {documents.map((document) => (
               <div key={document.id}>
                 <Link to={`/exam/${document.id}`}>
