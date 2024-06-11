@@ -120,7 +120,7 @@ const Header = () => {
         <div className="text-left flex-grow">
           <span
             className="font-medium text-lg text-brand-green"
-            style={{ fontSize: "30px", color: "#00c853", fontWeight: "bold" }}
+            style={{ fontSize: "30px", color: "#48DA7D", fontWeight: "bold" }}
           >
             EduArchive
           </span>
