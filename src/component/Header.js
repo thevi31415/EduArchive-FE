@@ -90,7 +90,7 @@ const Header = () => {
                   marginLeft: "10px",
                 }}
               >
-                EduArchive
+                <a href="/">EduArchive</a>{" "}
               </span>
               <div className="flex justify-center m-2">
                 <div
@@ -127,7 +127,7 @@ const Header = () => {
                               marginLeft: "10px",
                             }}
                           >
-                            EduArchive
+                            <a href="/">EduArchive</a>
                           </span>
                           <span
                             aria-hidden="true"

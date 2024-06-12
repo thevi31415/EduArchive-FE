@@ -4,7 +4,16 @@ function Footer() {
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:py-12">
         <a href="/">
           <div className="inline-flex gap-1.5 text-lg">
-            <span className="font-medium text-gray-900">EduArchive</span>
+            <span
+              className="font-medium "
+              style={{
+                fontSize: "30px",
+                color: "#48DA7D",
+                fontWeight: "bold",
+              }}
+            >
+              EduArchive
+            </span>
             <span aria-hidden="true" role="img">
               ✨
             </span>
@@ -21,6 +30,9 @@ function Footer() {
                 <a
                   className="block text-sm font-medium text-gray-900 hover:opacity-75"
                   href="/about/faqs"
+                  style={{
+                    color: "#48DA7D",
+                  }}
                 >
                   FAQs
                 </a>
@@ -29,17 +41,23 @@ function Footer() {
                 <a
                   className="block text-sm font-medium text-gray-900 hover:opacity-75"
                   href="/about/acknowledgements"
+                  style={{
+                    color: "#48DA7D",
+                  }}
                 >
                   Acknowledgements
                 </a>
               </li>
             </ul>
-            <p className="mt-4 text-sm text-gray-700 lg:mt-0">
+            <p className="mt-4  text-gray-700 lg:mt-0">
               Created by{" "}
               <a
                 href="https://github.com/thevi31415/"
                 rel="noreferrer"
                 target="_blank"
+                style={{
+                  color: "#48DA7D",
+                }}
                 className="inline-block font-medium hover:text-gray-900"
               >
                 Nguyen Duong The Vi
