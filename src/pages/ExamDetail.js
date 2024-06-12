@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 function ExamDetail() {
   const { examId } = useParams();
+  const navigate = useNavigate();
+
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -11,29 +13,57 @@ function ExamDetail() {
   const getFileExtension = (url) => {
     return url.split(".").pop().toLowerCase();
   };
+  // useEffect(() => {
+  //   setLoading(true); // Bắt đầu loading khi useEffect được gọi
+  //   fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setDocument(data.data);
+  //       const linkDownload = data.data.linkDownload;
+  //       const fileExtension = linkDownload.split(".").pop().toLowerCase();
+  //       if (fileExtension === "pdf") {
+  //         setViewerUrl(linkDownload);
+  //       } else if (fileExtension === "docx" || fileExtension === "doc") {
+  //         setViewerUrl(
+  //           `https://docs.google.com/gview?url=${encodeURIComponent(
+  //             linkDownload
+  //           )}&embedded=true`
+  //         );
+  //       } else {
+  //         console.error("Unsupported file type");
+  //       }
+  //       setLoading(false); // Kết thúc loading khi dữ liệu được load xong
+  //     });
+  // }, [examId]);
   useEffect(() => {
-    setLoading(true); // Bắt đầu loading khi useEffect được gọi
+    setLoading(true);
     fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
       .then((res) => res.json())
       .then((data) => {
-        setDocument(data.data);
-        const linkDownload = data.data.linkDownload;
-        const fileExtension = linkDownload.split(".").pop().toLowerCase();
-        if (fileExtension === "pdf") {
-          setViewerUrl(linkDownload);
-        } else if (fileExtension === "docx" || fileExtension === "doc") {
-          setViewerUrl(
-            `https://docs.google.com/gview?url=${encodeURIComponent(
-              linkDownload
-            )}&embedded=true`
-          );
+        if (data.data) {
+          setDocument(data.data);
+          const linkDownload = data.data.linkDownload;
+          const fileExtension = linkDownload.split(".").pop().toLowerCase();
+          if (fileExtension === "pdf") {
+            setViewerUrl(linkDownload);
+          } else if (fileExtension === "docx" || fileExtension === "doc") {
+            setViewerUrl(
+              `https://docs.google.com/gview?url=${encodeURIComponent(
+                linkDownload
+              )}&embedded=true`
+            );
+          } else {
+            console.error("Unsupported file type");
+          }
         } else {
-          console.error("Unsupported file type");
+          navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu document là null
         }
-        setLoading(false); // Kết thúc loading khi dữ liệu được load xong
+        setLoading(false);
+      })
+      .catch(() => {
+        navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu có lỗi
       });
-  }, [examId]);
-
+  }, [examId, API_BASE_URL, navigate]);
   if (loading) {
     return (
       <div

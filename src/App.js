@@ -15,6 +15,7 @@ import Blog from "./pages/Blog";
 import UserDetail from "./pages/UserDetail";
 import DocumentDetail from "./pages/DocumentDetail";
 import ExamDetail from "./pages/ExamDetail";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -60,6 +61,8 @@ function App() {
             <Route path="/user/:userId" element={<UserDetail />} />
             <Route path="/document/:documentId" element={<DocumentDetail />} />
             <Route path="/exam/:examId" element={<ExamDetail />} />
+            <Route path="*" element={<NotFound />} />{" "}
+            {/* Route này sẽ bắt mọi URL không khớp */}
           </Routes>
         </main>
 

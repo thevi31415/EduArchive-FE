@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 const Header = () => {
   const [users, setUser] = useState([]);
   const [token, setToken] = useState(null);
+  const [show, setShow] = useState(false);
+
   useEffect(() => {
     const savedToken = localStorage.getItem("Token");
     const savedUser = localStorage.getItem("User");
@@ -19,6 +21,27 @@ const Header = () => {
     setToken(null);
     setUser(null);
   };
+  useEffect(() => {
+    const handleClick = () => {
+      const menubtn = document.getElementById("menu-button");
+      const menu = document.getElementById("menu");
+      if (menubtn && menu) {
+        menu.classList.toggle("hidden");
+      }
+    };
+
+    const menubtn = document.getElementById("menu-button");
+    if (menubtn) {
+      menubtn.addEventListener("click", handleClick);
+    }
+
+    // Cleanup function to remove the event listener
+    return () => {
+      if (menubtn) {
+        menubtn.removeEventListener("click", handleClick);
+      }
+    };
+  }, []);
   return (
     // <div className=" py-8 md:py-5 border-b border-gray-200 ">
     //   <div className="space-between mb-0 flex items-center xl:mb-6">
@@ -151,7 +174,7 @@ const Header = () => {
           )}
         </div>
       </div>
-      <nav
+      {/* <nav
         className="flex justify-between items-center  py-2 bg-white"
         style={{ marginLeft: "10px", marginRight: "10px" }}
       >
@@ -218,6 +241,82 @@ const Header = () => {
           </li>
         </ul>
         <div></div>
+      </nav> */}
+      <nav className=" top-0 left-0 w-full z-10">
+        <div>
+          <div className="md:hidden">
+            <div className="flex justify-center m-2">
+              <div
+                className="flex items-center p-1 px-3 border rounded-md cursor-pointer"
+                id="menu-button"
+              >
+                <img
+                  className="w-5 h-5 mr-2"
+                  src={require("../pages/images/menu.png")}
+                  alt="menu"
+                  width={50}
+                  height={50}
+                />
+                <div className="text-xl">Menu</div>
+              </div>
+            </div>
+          </div>
+          <div className="hidden md:block" id="menu">
+            <ul className="text-lg font-medium md:flex">
+              <li className="p-3 mx-2 ">
+                <p className="relative group">
+                  <span>
+                    {/* <a href="/">🏠</a> */}
+                    <a href="/" className="gradient-text">
+                      Trang chủ
+                    </a>
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
+                </p>
+              </li>
+              <li className="p-3 mx-2 ">
+                <p className="relative group">
+                  <span>
+                    <a href="/document" className="gradient-text">
+                      Tài liệu
+                    </a>
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
+                </p>
+              </li>
+              <li className="p-3 mx-2 ">
+                <p className="relative group">
+                  <span>
+                    <a href="/exam" className="gradient-text">
+                      Đề thi
+                    </a>
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
+                </p>
+              </li>
+              <li className="p-3 mx-2 ">
+                <p className="relative group">
+                  <span>
+                    <a href="/project" className="gradient-text">
+                      Đồ án
+                    </a>
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
+                </p>
+              </li>
+              <li className="p-3 mx-2 ">
+                <p className="relative group">
+                  <span>
+                    <a href="/subject" className="gradient-text">
+                      Môn học
+                    </a>
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
       </nav>
     </div>
   );
