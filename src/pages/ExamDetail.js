@@ -88,20 +88,27 @@ function ExamDetail() {
   const formattedDate = formatDate(document.createDate);
   return (
     <>
-      <nav className="flex  bg-green-100 p-4 w-full" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-4 text-green-500">
+      <nav
+        className="flex p-4 ml-4 w-full mt-5"
+        aria-label="Breadcrumb"
+        style={{ marginTop: "20px" }}
+      >
+        <ol
+          className="flex items-center space-x-4 text-green-500"
+          style={{ fontSize: "20px" }}
+        >
           <li>
             <a href="#" className="hover:underline">
-              Trang chủ
+              <i className="fa-solid fa-house "></i> Trang chủ
             </a>
           </li>
           <li>
             <span>/</span>
           </li>
           <li>
-            <a href="#" className="hover:underline">
-              Đề thi
-            </a>
+            <span className="hover:underline">
+              <i className="fa-solid fa-file"></i> Đề thi
+            </span>
           </li>
           <li>
             <span>/</span>
@@ -111,6 +118,7 @@ function ExamDetail() {
           </li>
         </ol>
       </nav>
+
       <div className="container mx-auto p-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">

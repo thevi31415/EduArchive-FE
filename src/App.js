@@ -20,13 +20,8 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <body className="max-w-screen font-sans leading-normal text-black lg:text-base ">
-      <div className="w-full flex justify-center items-start md:items-center box-border md:py-2 py-3 bg-[#E6F8F9] md:px-3 pl-3 pr-12 lg:relative top-0 z-[99999] lg:z-auto">
+      <div className="  w-full flex justify-center items-start md:items-center box-border md:py-2 py-3 bg-[#E6F8F9] md:px-3 pl-3 pr-12 lg:relative top-0 z-[99999] lg:z-auto">
         <div className="relative my-auto mr-3 mt-0 md:m-0 md:mr-1">
-          {/* <img
-            className="w-[40px] h-[40px] md:h-[35px] md:w-[35px]"
-            src="/img/insurance.svg"
-            alt="insurance.svg"
-          /> */}
           <span style={{ fontSize: "25px", margin: "5px" }}>🎉</span>
         </div>
         <div>
@@ -49,7 +44,10 @@ function App() {
         <header className="mx-auto flex max-w-8xl flex-col">
           <Header />
         </header>
-        <main className="relative mx-auto max-w-8xl px-15  lg:flex-wrap lg:gap-x-8 lg:ml-70 lg:mr-70">
+        <main
+          className="relative mx-auto max-w-8xl px-15  lg:flex-wrap lg:gap-x-8 lg:ml-70 lg:mr-70"
+          style={{ marginTop: "100px" }}
+        >
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/blog" element={<Blog />}></Route>

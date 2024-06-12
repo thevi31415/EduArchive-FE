@@ -22,19 +22,27 @@ function Project() {
 
   return (
     <>
-      <nav className="flex  bg-green-100 p-4 w-full" aria-label="Breadcrumb">
-        <ol className="flex items-center space-x-4 text-green-500">
+      <nav
+        className="flex p-4 ml-4 w-full mt-5"
+        aria-label="Breadcrumb"
+        style={{ marginTop: "20px" }}
+      >
+        <ol
+          className="flex items-center space-x-4 text-green-500"
+          style={{ fontSize: "20px" }}
+        >
           <li>
             <a href="#" className="hover:underline">
-              Trang chủ
+              <i className="fa-solid fa-house "></i> Trang chủ
             </a>
           </li>
           <li>
             <span>/</span>
           </li>
-
           <li>
-            <span className="font-bold">Đồ án</span>
+            <span className="font-bold">
+              <i className="fa-solid fa-graduation-cap"></i> Đồ án
+            </span>
           </li>
         </ol>
       </nav>
