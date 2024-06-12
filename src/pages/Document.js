@@ -75,16 +75,36 @@ function Document() {
               <ClipLoader color={"#60B557"} loading={loading} size={100} />
             </div>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
-            {documents.map((document) => (
-              <div key={document.id}>
-                <Link to={`/document/${document.id}`}>
-                  {" "}
-                  <DocumentCard document={document} />
-                </Link>
+          {documents.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+              {documents.map((document) => (
+                <div key={document.id}>
+                  <Link to={`/document/${document.id}`}>
+                    {" "}
+                    <DocumentCard document={document} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div
+              className="flex items-center justify-center "
+              style={{ margin: "20px" }}
+            >
+              <div className="text-center">
+                <p
+                  className="text-lg font-bold mb-2"
+                  style={{ fontSize: "30px", color: "#70DE92" }}
+                >
+                  Không tìm thấy tài liệu !
+                </p>
+                <p className="text-gray-600">
+                  Xin lỗi, hiện tại chưa có tài liệu nào. Vui lòng quay trở lại
+                  sau !
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </>
