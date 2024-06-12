@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, useLocation } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 const Header = () => {
   const [users, setUser] = useState([]);
   const [token, setToken] = useState(null);
   const [show, setShow] = useState(false);
-
+  const location = useLocation();
+  const getLinkClasses = (path) => {
+    return location.pathname === path
+      ? "gradient-text flex items-center text-green-500 relative after:absolute after:-bottom-1 after:left-0 after:w-full after:h-1 after:bg-green-400"
+      : "gradient-text flex items-center group-hover:text-green-500 transition-colors";
+  };
   useEffect(() => {
     const savedToken = localStorage.getItem("Token");
     const savedUser = localStorage.getItem("User");
@@ -263,53 +269,55 @@ const Header = () => {
           </div>
           <div className="hidden md:block" id="menu">
             <ul className="text-lg font-medium md:flex">
-              <li className="p-3 mx-2 ">
+              <li className="p-3 mx-2">
                 <p className="relative group">
                   <span>
-                    {/* <a href="/">🏠</a> */}
-                    <a href="/" className="gradient-text">
-                      Trang chủ
-                    </a>
+                    <Link to="/" className={getLinkClasses("/")}>
+                      <i className="fa-solid fa-house mr-2"></i> Trang chủ
+                    </Link>
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                 </p>
               </li>
-              <li className="p-3 mx-2 ">
+              <li className="p-3 mx-2">
                 <p className="relative group">
                   <span>
-                    <a href="/document" className="gradient-text">
-                      Tài liệu
-                    </a>
+                    <Link
+                      to="/document"
+                      className={getLinkClasses("/document")}
+                    >
+                      <i className="fa-solid fa-folder mr-2"></i> Tài liệu
+                    </Link>
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                 </p>
               </li>
-              <li className="p-3 mx-2 ">
+              <li className="p-3 mx-2">
                 <p className="relative group">
                   <span>
-                    <a href="/exam" className="gradient-text">
-                      Đề thi
-                    </a>
+                    <Link to="/exam" className={getLinkClasses("/exam")}>
+                      <i className="fa-solid fa-file mr-2"></i> Đề thi
+                    </Link>
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                 </p>
               </li>
-              <li className="p-3 mx-2 ">
+              <li className="p-3 mx-2">
                 <p className="relative group">
                   <span>
-                    <a href="/project" className="gradient-text">
-                      Đồ án
-                    </a>
+                    <Link to="/project" className={getLinkClasses("/project")}>
+                      <i className="fa-solid fa-graduation-cap mr-2"></i> Đồ án
+                    </Link>
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                 </p>
               </li>
-              <li className="p-3 mx-2 ">
+              <li className="p-3 mx-2">
                 <p className="relative group">
                   <span>
-                    <a href="/subject" className="gradient-text">
-                      Môn học
-                    </a>
+                    <Link to="/subject" className={getLinkClasses("/subject")}>
+                      <i className="fa-solid fa-book mr-2"></i> Môn học
+                    </Link>
                   </span>
                   <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                 </p>
