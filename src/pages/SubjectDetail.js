@@ -92,7 +92,7 @@ function SubjectDetail() {
             padding: "20px",
             borderRadius: "15px",
             paddingRight: "50px",
-            paddingLeft: "90px",
+            paddingLeft: "50px",
           }}
         >
           <div>
