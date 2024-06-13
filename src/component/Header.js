@@ -9,9 +9,9 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
+    const savedUser = localStorage.getItem("userName");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(savedUser);
     }
   }, []);
 
@@ -209,7 +209,7 @@ const Header = () => {
                         onClick={handleButtonClick}
                       >
                         <span className="px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-600 md:py-2 md:text-lg md:px-5">
-                          {user ? `Xin Chào ! ${user.userName}` : "Đăng nhập"}
+                          {user ? `Xin Chào ! ${user}` : "Đăng nhập"}
                         </span>
                       </button>
                     </div>

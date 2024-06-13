@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -7,18 +8,14 @@ function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve userId, idGoogle, and token from localStorage
     const userId = localStorage.getItem("userId");
     const idGoogle = localStorage.getItem("idGoogle");
     const token = localStorage.getItem("token");
-
-    // Check if userId, idGoogle, or token is missing
     if (!userId || !idGoogle || !token) {
-      navigate("/login"); // Redirect to login if any of these are missing
+      navigate("/login");
       return;
     }
 
-    // Fetch user data using Bearer token for authentication
     fetch(`${API_BASE_URL}/api/User/${userId}/${idGoogle}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -37,7 +34,7 @@ function Profile() {
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   if (!user) {
     return <div>Loading...{user?.id}</div>;
@@ -47,11 +44,11 @@ function Profile() {
     localStorage.removeItem("userId");
     localStorage.removeItem("idGoogle");
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); // Remove userId from localStorage
-    // Remove userId from localStorage
-    // Remove userId from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userName");
     setUser(null);
-    navigate("/login"); // Redirect to login after logout
+    navigate("/login");
   };
 
   return (
@@ -100,6 +97,7 @@ function Profile() {
           Đăng xuất
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import logo from "./logo.svg";
-import { Routes, Route, Link } from "react-router-dom";
-
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import "./App.css";
 import Header from "./component/Header";
 import React, { useState, useEffect } from "react";
@@ -20,9 +19,11 @@ import SubjectDetail from "./pages/SubjectDetail";
 import Profile from "./pages/Profile";
 
 function App() {
+  const location = useLocation();
+
   return (
-    <body className="max-w-screen font-sans leading-normal text-black lg:text-base ">
-      <div className="  w-full flex justify-center items-start md:items-center box-border md:py-2 py-3 bg-[#E6F8F9] md:px-3 pl-3 pr-12 lg:relative top-0 z-[99999] lg:z-auto">
+    <div className="max-w-screen font-sans leading-normal text-black lg:text-base">
+      <div className="w-full flex justify-center items-start md:items-center box-border md:py-2 py-3 bg-[#E6F8F9] md:px-3 pl-3 pr-12 lg:relative top-0 z-[99999] lg:z-auto">
         <div className="relative my-auto mr-3 mt-0 md:m-0 md:mr-1">
           <span style={{ fontSize: "25px", margin: "5px" }}>🎉</span>
         </div>
@@ -40,37 +41,36 @@ function App() {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
         />
-        <header className="mx-auto flex max-w-8xl flex-col">
-          <Header />
-        </header>
+        {location.pathname !== "/login" && (
+          <header className="mx-auto flex max-w-8xl flex-col">
+            <Header />
+          </header>
+        )}
         <main
-          className="relative mx-auto max-w-8xl px-15  lg:flex-wrap lg:gap-x-8 lg:ml-70 lg:mr-70"
-          style={{ marginTop: "100px" }}
+          className="relative mx-auto max-w-8xl px-15 lg:flex-wrap lg:gap-x-8 lg:ml-70 lg:mr-70"
+          style={location.pathname !== "/login" ? { marginTop: "100px" } : {}}
         >
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/blog" element={<Blog />}></Route>
-            <Route path="/document" element={<Document />}></Route>
-            <Route path="/exam" element={<Exam />}></Route>
-            <Route path="/project" element={<Project />}></Route>
-            <Route path="/subject" element={<Subject />}></Route>
-            <Route path="/login" element={<Login />}></Route>
+            <Route path="/" element={<Home />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/document" element={<Document />} />
+            <Route path="/exam" element={<Exam />} />
+            <Route path="/project" element={<Project />} />
+            <Route path="/subject" element={<Subject />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/document/:documentId" element={<DocumentDetail />} />
             <Route path="/exam/:examId" element={<ExamDetail />} />
             <Route path="/subject/:subjectId" element={<SubjectDetail />} />
-            <Route path="*" element={<NotFound />} />{" "}
-            {/* Route này sẽ bắt mọi URL không khớp */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-
-        <Footer />
+        {location.pathname !== "/login" && <Footer />}
       </div>
-    </body>
+    </div>
   );
 }
-
 export default App;
