@@ -321,7 +321,7 @@ const Login = () => {
           </div>
           <div className="hidden md:block">
             <img
-              src="https://res.cloudinary.com/dhs93uix6/image/upload/v1718267670/2151164314_hwt1yi.jpg"
+              src="https://res.cloudinary.com/dhs93uix6/image/upload/v1718276741/UP_f5mxd6.jpg"
               alt="Placeholder"
               className="w-[600px] h-[600px] object-cover rounded-md"
             />
