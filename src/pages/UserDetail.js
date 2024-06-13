@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 function UserDetail() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/User/${userId}`)
       .then((res) => res.json())
@@ -15,7 +15,11 @@ function UserDetail() {
   if (!user) {
     return <div>Loading...</div>;
   }
-
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login"); // Điều hướng về trang đăng nhập sau khi đăng xuất
+  };
   return (
     <div>
       <div>
@@ -36,7 +40,7 @@ function UserDetail() {
           <strong>Armorial:</strong> {user.armorial}
         </p>
         <p>
-          <strong>Avatar:</strong> <img src={user.avatar} alt="Avatar" />
+          <strong>Avatar:</strong> <img src={user.avartar} alt="Avatar" />
         </p>
         <p>
           <strong>Organization:</strong> {user.organization}
@@ -55,6 +59,12 @@ function UserDetail() {
         <p>
           <strong>Status:</strong> {user.status === 1 ? "Active" : "Inactive"}
         </p>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-500 hover:bg-red-600 md:py-2 md:text-lg md:px-5"
+        >
+          Đăng xuất
+        </button>
       </div>
     </div>
   );

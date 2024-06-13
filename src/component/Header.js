@@ -1,14 +1,27 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, useLocation } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 const Header = () => {
-  const [users, setUser] = useState([]);
-  const [token, setToken] = useState(null);
-  const [show, setShow] = useState(false);
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleButtonClick = () => {
+    if (user) {
+      navigate(`/user/${user.userName}`);
+    } else {
+      navigate("/login");
+    }
+  };
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768); // Chỉnh số 768 tùy vào kích thước màn hình bạn muốn coi là di động
@@ -26,21 +39,7 @@ const Header = () => {
       ? "gradient-text flex items-center text-green-500 relative after:absolute after:-bottom-1 after:left-0 after:w-full after:h-1 after:bg-green-400"
       : "gradient-text flex items-center group-hover:text-green-500 transition-colors";
   };
-  useEffect(() => {
-    const savedToken = localStorage.getItem("Token");
-    const savedUser = localStorage.getItem("User");
 
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
-  const handleLogout = () => {
-    localStorage.removeItem("Token");
-    localStorage.removeItem("User");
-    setToken(null);
-    setUser(null);
-  };
   useEffect(() => {
     const handleClick = () => {
       const menubtn = document.getElementById("menu-button");
@@ -202,58 +201,17 @@ const Header = () => {
                     <span className="absolute -bottom-1 left-0 w-0 h-1 bg-green-400 transition-all group-hover:w-full"></span>
                   </p>
                 </li>
-                {/* <li className="p-3 mx-2">
-                  <p className="relative group">
-                    <div>
-                      {token && users ? (
-                        <div className="flex items-center">
-                          <span className="mr-4">Xin chào! {users.name}</span>
-                          <button
-                            onClick={handleLogout}
-                            className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
-                          >
-                            Đăng xuất
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="text-black duration-200 ease-in-out hover:text-brand-green rounded-md shadow">
-                          <a
-                            href="/login"
-                            className="px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-600 md:py-2 md:text-lg md:px-5"
-                          >
-                            Đăng nhập
-                          </a>
-                        </button>
-                      )}
-                    </div>
-                  </p>
-                </li> */}
-
                 <li className="p-3 mx-2 md:ml-auto">
-                  {" "}
-                  {/* This line has been modified */}
                   <p className="relative group">
                     <div>
-                      {token && users ? (
-                        <div className="flex items-center">
-                          <span className="mr-4">Xin chào! {users.name}</span>
-                          <button
-                            onClick={handleLogout}
-                            className="text-gray-800 hover:text-black hover:underline transition duration-200 ease-in-out"
-                          >
-                            Đăng xuất
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="text-black duration-200 ease-in-out hover:text-brand-green rounded-md shadow">
-                          <a
-                            href="/login"
-                            className="px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-600 md:py-2 md:text-lg md:px-5"
-                          >
-                            Đăng nhập
-                          </a>
-                        </button>
-                      )}
+                      <button
+                        className="text-black duration-200 ease-in-out hover:text-brand-green rounded-md shadow"
+                        onClick={handleButtonClick}
+                      >
+                        <span className="px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-400 hover:bg-green-600 md:py-2 md:text-lg md:px-5">
+                          {user ? `Xin Chào ! ${user.userName}` : "Đăng nhập"}
+                        </span>
+                      </button>
                     </div>
                   </p>
                 </li>
