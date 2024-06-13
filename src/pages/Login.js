@@ -317,6 +317,10 @@ const Login = () => {
                   </svg>
                 </button>
               </div>
+              <p className="my-8 text-sm text-gray-400 text-center">
+                &copy; {new Date().getFullYear()} Nguyen Duong The Vi. All
+                Rights Reserved.{" "}
+              </p>
             </form>
           </div>
           <div className="hidden md:block">
