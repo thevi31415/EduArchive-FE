@@ -12,11 +12,12 @@ import Subject from "./pages/Subject";
 import Login from "./pages/Login";
 import Footer from "./component/Footer";
 import Blog from "./pages/Blog";
-import UserDetail from "./pages/UserDetail";
+import UserDetail from "./pages/Profile";
 import DocumentDetail from "./pages/DocumentDetail";
 import ExamDetail from "./pages/ExamDetail";
 import NotFound from "./pages/NotFound";
 import SubjectDetail from "./pages/SubjectDetail";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -57,7 +58,7 @@ function App() {
             <Route path="/project" element={<Project />}></Route>
             <Route path="/subject" element={<Subject />}></Route>
             <Route path="/login" element={<Login />}></Route>
-            <Route path="/user/:userId" element={<UserDetail />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/document/:documentId" element={<DocumentDetail />} />
             <Route path="/exam/:examId" element={<ExamDetail />} />
             <Route path="/subject/:subjectId" element={<SubjectDetail />} />

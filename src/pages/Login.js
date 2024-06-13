@@ -10,14 +10,11 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Login = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-  const [token, setToken] = useState(() => {
-    const savedToken = localStorage.getItem("token");
-    return savedToken ? savedToken : null;
-  });
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
+  const [idGoogle, setIdGoogle] = useState(
+    localStorage.getItem("idGoogle") || null
+  );
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
 
   const login = useGoogleLogin({
     onSuccess: async (codeResponse) => {
@@ -44,18 +41,20 @@ const Login = () => {
 
         const apiData = apiRes.data;
         if (apiData.status) {
-          setUser(apiData.data.user);
+          setUserId(apiData.data.user.id);
+          setIdGoogle(apiData.data.user.idGoogle);
           setToken(apiData.data.token);
-          localStorage.setItem("user", JSON.stringify(apiData.data.user));
+          localStorage.setItem("userId", apiData.data.user.id);
+          localStorage.setItem("idGoogle", apiData.data.user.idGoogle);
           localStorage.setItem("token", apiData.data.token);
           toast.success(apiData.message);
-          navigate(`/user/${apiData.data.user.userName}`);
+          navigate(`/profile`);
         } else {
           toast.error("Đăng nhập thất bại.");
         }
       } catch (error) {
         console.error("API call failed:", error);
-        toast.error("Đăng nhập thất bại.");
+        toast.error("Đăng nhập thất bại." + error);
       }
     },
     onError: (error) => console.log("Login Failed:", error),
@@ -63,9 +62,11 @@ const Login = () => {
 
   const logOut = () => {
     googleLogout();
-    setUser(null);
+    setUserId(null);
+    setIdGoogle(null);
     setToken(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("idGoogle");
     localStorage.removeItem("token");
   };
 
@@ -74,12 +75,11 @@ const Login = () => {
       <h2>React Google Login</h2>
       <br />
       <br />
-      {user ? (
+      {userId ? (
         <div>
-          <img src={user.avatar} alt="user image" />
+          {/* Display user information if logged in */}
           <h3>User Logged in</h3>
-          <p>Name: {user.name}</p>
-          <p>Email Address: {user.email}</p>
+          {/* You can optionally display user avatar and other details */}
           <br />
           <br />
           <button onClick={logOut}>Log out</button>

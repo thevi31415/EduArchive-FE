@@ -1,31 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-function UserDetail() {
-  const { userId } = useParams();
+
+function Profile() {
   const [user, setUser] = useState(null);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
+
   useEffect(() => {
-    fetch(`${API_BASE_URL}/api/User/${userId}`)
-      .then((res) => res.json())
-      .then((data) => setUser(data.data));
-  }, [userId]);
+    // Retrieve userId, idGoogle, and token from localStorage
+    const userId = localStorage.getItem("userId");
+    const idGoogle = localStorage.getItem("idGoogle");
+    const token = localStorage.getItem("token");
+
+    // Check if userId, idGoogle, or token is missing
+    if (!userId || !idGoogle || !token) {
+      navigate("/login"); // Redirect to login if any of these are missing
+      return;
+    }
+
+    // Fetch user data using Bearer token for authentication
+    fetch(`${API_BASE_URL}/api/User/${userId}/${idGoogle}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setUser(data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, []); // Empty dependency array ensures this effect runs only once
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div>Loading...{user?.id}</div>;
   }
+
   const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("idGoogle");
     localStorage.removeItem("user");
+    localStorage.removeItem("token"); // Remove userId from localStorage
+    // Remove userId from localStorage
+    // Remove userId from localStorage
     setUser(null);
-    navigate("/login"); // Điều hướng về trang đăng nhập sau khi đăng xuất
+    navigate("/login"); // Redirect to login after logout
   };
+
   return (
     <div>
       <div>
         <h1>User Details</h1>
         <p>
-          <strong>Name:</strong> {user.name}
+          <strong>Name:</strong> {user.id}
         </p>
         <p>
           <strong>Username:</strong> {user.userName}
@@ -70,4 +104,4 @@ function UserDetail() {
   );
 }
 
-export default UserDetail;
+export default Profile;

@@ -17,7 +17,7 @@ const Header = () => {
 
   const handleButtonClick = () => {
     if (user) {
-      navigate(`/user/${user.userName}`);
+      navigate(`/profile`);
     } else {
       navigate("/login");
     }
