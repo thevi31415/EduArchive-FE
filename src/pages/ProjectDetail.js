@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import GoogleDriveViewer from "../component/GoogleDriveViewer";
+import GoogleDriveDownloader from "./GoogleDriveDownloader";
+import { ToastContainer, toast } from "react-toastify";
 
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  TelegramShareButton,
+  TwitterShareButton,
+} from "react-share";
+import {
+  EmailIcon,
+  FacebookIcon,
+  TelegramIcon,
+  TwitterIcon,
+} from "react-share";
 function ProjectDetail() {
+  const currentUrl = window.location.href;
+  const googleDriveUrl =
+    "https://drive.google.com/file/d/14nR6-rGZFeXvn8Hrq44BiCn6YhXqa5Xd/view";
   const { projectId } = useParams();
   const navigate = useNavigate();
 
@@ -13,7 +31,40 @@ function ProjectDetail() {
   const getFileExtension = (url) => {
     return url.split(".").pop().toLowerCase();
   };
-  // useEffect(() => {
+  const copyToClipboard = () => {
+    const currentUrl = window.location.href;
+
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        toast.success("Sao chép đường link thành công !");
+      })
+      .catch((err) => {
+        toast.error("Không thể sao chép đường link !");
+      });
+  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+  };
+
   //   setLoading(true); // Bắt đầu loading khi useEffect được gọi
   //   fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
   //     .then((res) => res.json())
@@ -78,13 +129,7 @@ function ProjectDetail() {
       </div>
     );
   }
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
+
   const formattedDate = formatDate(document.createDate);
   return (
     <>
@@ -122,89 +167,157 @@ function ProjectDetail() {
       <div className="container mx-auto p-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
-            <h1 className="text-4xl font-bold mb-4">{document.title}</h1>
-            <p className="text-gray-800">
+            <h1
+              className="text-4xl  mb-4"
+              style={{ fontWeight: "600", color: "#0A0A0A" }}
+            >
+              💡{document.title}
+            </h1>
+            <p
+              className="text-gray-800"
+              style={{ color: "#7A838C", fontSize: "17px" }}
+            >
               Tải lên bởi{" "}
-              <span className="font-bold" style={{ color: "#02FBA3" }}>
+              <span className="font-bold" style={{ color: "#48DA7D" }}>
                 {document.nameAuthor}
               </span>{" "}
-              vào <span className="font-bold">{formattedDate}</span>
+              vào <span>{formattedDate}</span>
             </p>
-            <div className="bg-green-100 border border-green-400 rounded-lg p-6 mt-6">
-              <div className="flex items-center mb-4">
-                <i className="fa-solid fa-school fa-lg text-green-500 mr-4"></i>
-                <div>
-                  <p className="text-gray-800 text-lg font-semibold">
+            <div className="flex justify-between mt-3 mb-3">
+              <div className="space-x-2">
+                <FacebookShareButton
+                  url={currentUrl}
+                  quote={"EduArchive"}
+                  hashtag="#EduArchive"
+                  className="text-center"
+                >
+                  <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <TwitterShareButton
+                  url={currentUrl}
+                  quote={"EduArchive"}
+                  hashtag="#EduArchive"
+                  className="text-center"
+                >
+                  <TwitterIcon size={32} round />
+                </TwitterShareButton>
+                <TelegramShareButton
+                  url={currentUrl}
+                  quote={"EduArchive"}
+                  hashtag="#EduArchive"
+                  className="text-center"
+                >
+                  <TelegramIcon size={32} round />
+                </TelegramShareButton>
+                <EmailShareButton
+                  url={currentUrl}
+                  quote={"EduArchive"}
+                  hashtag="#EduArchive"
+                  className="text-center"
+                >
+                  <EmailIcon size={32} round />
+                </EmailShareButton>
+              </div>
+              <div className="space-x-2" style={{ color: "#48DA7D" }}>
+                <button
+                  onClick={copyToClipboard}
+                  className="font-bold py-2 px-3 "
+                  style={{ fontSize: "26px" }}
+                >
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+                <button
+                  className="font-bold py-2 px-3 "
+                  style={{ fontSize: "26px" }}
+                >
+                  <i class="fa-solid fa-bookmark"></i>
+                </button>
+                <button
+                  className="font-bold py-2 px-3 "
+                  style={{ fontSize: "26px" }}
+                >
+                  <i class="fa-solid fa-heart"></i> 0
+                </button>
+              </div>
+            </div>
+
+            <div className=" mt-2">
+              <div className="flex items-center space-x-8">
+                <div className="flex items-center">
+                  <i
+                    className="fa-solid fa-school fa-lg  mr-2"
+                    style={{ color: "#2F3E4E" }}
+                  ></i>
+                  <a
+                    href="#"
+                    className="text-lg font-semibold relative hover:underline"
+                    style={{ color: "#48DA7D" }}
+                  >
                     {document.nameSchool}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {/* Add any additional info if needed */}
-                  </p>
+                  </a>
                 </div>
-              </div>
-              <div className="flex items-center mb-4">
-                <i className="fa-solid fa-book fa-lg text-green-500 mr-4"></i>
-                <div>
-                  <p className="text-gray-800 text-lg font-semibold">
+                <div className="flex items-center">
+                  <i
+                    className="fa-solid fa-book fa-lg  mr-2"
+                    style={{ color: "#2F3E4E" }}
+                  ></i>
+                  <a
+                    href="#"
+                    className="text-lg font-semibold relative hover:underline"
+                    style={{ color: "#48DA7D" }}
+                  >
                     {document.nameSubject}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {/* Add any additional info if needed */}
-                  </p>
+                  </a>
                 </div>
-              </div>
-              <div className="flex items-center mb-4">
-                <i className="fa-solid fa-calendar-days fa-lg text-green-500 mr-4"></i>
-                <div>
-                  <p className="text-gray-800 text-lg font-semibold">
+                <div className="flex items-center">
+                  <i
+                    className="fa-solid fa-calendar-days fa-lg  mr-2"
+                    style={{ color: "#2F3E4E" }}
+                  ></i>
+                  <a
+                    href="#"
+                    className="text-lg font-semibold relative hover:underline"
+                    style={{ color: "#48DA7D" }}
+                  >
                     {document.yearSchool}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {/* Add any additional info if needed */}
-                  </p>
+                  </a>
                 </div>
-              </div>
-              <div className="flex items-center">
-                <i className="fa-solid fa-eye fa-lg text-green-500 mr-4"></i>
-                <div>
-                  <p className="text-gray-800 text-lg font-semibold">
+                <div className="flex items-center">
+                  <i
+                    className="fa-solid fa-eye fa-lg  mr-2"
+                    style={{ color: "#2F3E4E" }}
+                  ></i>
+                  <a
+                    href="#"
+                    className="text-lg font-semibold relative hover:underline"
+                    style={{ color: "#48DA7D" }}
+                  >
                     {document.view}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {/* Add any additional info if needed */}
-                  </p>
+                  </a>
                 </div>
               </div>
             </div>
+            <p className=" mb-4 mt-5" style={{ color: "#4D5966" }}>
+              {document.description}
+            </p>
 
             <div style={{ width: "full", marginTop: "20px" }}>
               <img src={document.image} alt="Document" className="rounded-lg" />
             </div>
-            <div style={{ marginTop: "20px" }}>
-              <iframe
-                src={viewerUrl}
-                width="100%"
-                height="800px"
-                title="Document Viewer"
-              >
-                Your browser does not support iframes.
-              </iframe>
+
+            <div
+              style={{
+                marginTop: "20px",
+                backgroundColor: "black",
+                padding: "10px",
+                borderRadius: "10px",
+              }}
+            >
+              <GoogleDriveViewer url={document.linkView} />
             </div>
-            <p className="text-gray-600 mb-4 mt-5">{document.description}</p>
+
             <div className="flex items-center justify-center mt-4">
-              <a
-                href={document.linkDownload}
-                className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
-                download
-              >
-                <span className="flex items-center">
-                  <i
-                    className="fa-solid fa-download fa-lg"
-                    style={{ marginRight: "10px" }}
-                  ></i>
-                  Download
-                </span>
-              </a>
+              <GoogleDriveDownloader url={document.linkDownload} />
             </div>
 
             <div
@@ -265,6 +378,7 @@ function ProjectDetail() {
     ))} */}
           </div>
         </div>
+        <ToastContainer />
       </div>
     </>
   );
