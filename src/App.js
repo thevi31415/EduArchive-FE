@@ -17,6 +17,7 @@ import ExamDetail from "./pages/ExamDetail";
 import NotFound from "./pages/NotFound";
 import SubjectDetail from "./pages/SubjectDetail";
 import Profile from "./pages/Profile";
+import ProjectDetail from "./pages/ProjectDetail";
 
 function App() {
   const location = useLocation();
@@ -65,6 +66,8 @@ function App() {
             <Route path="/document/:documentId" element={<DocumentDetail />} />
             <Route path="/exam/:examId" element={<ExamDetail />} />
             <Route path="/subject/:subjectId" element={<SubjectDetail />} />
+            <Route path="/project/:projectId" element={<ProjectDetail />} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const DocumentCard = ({ document }) => {
+const ExamCard = ({ document }) => {
   let documentTypeTag;
   let documentTypeColor;
 
@@ -36,7 +36,7 @@ const DocumentCard = ({ document }) => {
           className="mb-3"
           style={{ color: "#48DA7D", fontSize: "19px", fontWeight: "500" }}
         >
-          📂{document.title}
+          📋{document.title}
         </h2>
         <div
           className="flex items-center text-gray-700 mb-1"
@@ -73,4 +73,4 @@ const DocumentCard = ({ document }) => {
   );
 };
 
-export default DocumentCard;
+export default ExamCard;

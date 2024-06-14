@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners"; // import ClipLoader từ react-spinners
-import DocumentCard from "../component/DocumentCard";
+
+import ProjectCard from "../component/ProjectCard";
 function Project() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,9 +79,8 @@ function Project() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
               {documents.map((document) => (
                 <div key={document.id}>
-                  <Link to={`/document/${document.id}`}>
-                    {" "}
-                    <DocumentCard document={document} />
+                  <Link to={`/project/${document.id}`}>
+                    <ProjectCard document={document} />
                   </Link>
                 </div>
               ))}

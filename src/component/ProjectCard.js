@@ -1,9 +1,8 @@
 import React from "react";
 
-const DocumentCard = ({ document }) => {
+const ProjectCard = ({ document }) => {
   let documentTypeTag;
   let documentTypeColor;
-
   switch (document.typeDocument) {
     case "DeThi":
       documentTypeTag = "Đề thi";
@@ -34,9 +33,13 @@ const DocumentCard = ({ document }) => {
       <div className="p-4">
         <h2
           className="mb-3"
-          style={{ color: "#48DA7D", fontSize: "19px", fontWeight: "500" }}
+          style={{
+            color: "#48DA7D",
+            fontSize: "19px",
+            fontWeight: "500",
+          }}
         >
-          📂{document.title}
+          💡{document.title}
         </h2>
         <div
           className="flex items-center text-gray-700 mb-1"
@@ -73,4 +76,4 @@ const DocumentCard = ({ document }) => {
   );
 };
 
-export default DocumentCard;
+export default ProjectCard;

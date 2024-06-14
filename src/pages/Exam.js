@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners"; // import ClipLoader từ react-spinners
-import DocumentCard from "../component/DocumentCard";
+// import DocumentCard from "../component/DocumentCard";
+import ExamCard from "../component/ExamCard";
 function Exam() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +79,7 @@ function Exam() {
             {documents.map((document) => (
               <div key={document.id}>
                 <Link to={`/exam/${document.id}`}>
-                  <DocumentCard document={document} />
+                  <ExamCard document={document} />
                 </Link>
               </div>
             ))}
