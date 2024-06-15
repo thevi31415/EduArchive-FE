@@ -103,7 +103,18 @@ function ProjectDetail() {
 
   const formattedDate = formatDate(document?.createDate);
   if (!document) {
-    return <h1>Error 404: Document not found</h1>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <ClipLoader size={100} color={"#00F5A2"} loading={true} />
+      </div>
+    );
   }
   return (
     <>

@@ -127,7 +127,7 @@ function ExamDetail() {
           height: "100vh",
         }}
       >
-        <ClipLoader size={100} color={"#00F5A2"} loading={loading} />
+        <ClipLoader size={100} color={"#00F5A2"} loading={true} />
       </div>
     );
   }
