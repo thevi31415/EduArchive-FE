@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import GoogleDriveViewer from "../component/GoogleDriveViewer";
-import GoogleDriveDownloader from "./GoogleDriveDownloader";
+import RelatedDocuments from "../component/RelatedDocuments";
+
 import { ToastContainer, toast } from "react-toastify";
+import DocumentBody from "./DocumentBody";
 
 import {
   EmailShareButton,
@@ -19,18 +20,16 @@ import {
 } from "react-share";
 function ProjectDetail() {
   const currentUrl = window.location.href;
-  const googleDriveUrl =
-    "https://drive.google.com/file/d/14nR6-rGZFeXvn8Hrq44BiCn6YhXqa5Xd/view";
+
   const { projectId } = useParams();
   const navigate = useNavigate();
+  const [subject, setSubject] = useState(null);
+  const [listDocuments, setListDocuments] = useState([]);
 
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  const [viewerUrl, setViewerUrl] = useState("");
-  const getFileExtension = (url) => {
-    return url.split(".").pop().toLowerCase();
-  };
+
   const copyToClipboard = () => {
     const currentUrl = window.location.href;
 
@@ -65,56 +64,28 @@ function ProjectDetail() {
     return `${month} ${day}, ${year}`;
   };
 
-  //   setLoading(true); // Bắt đầu loading khi useEffect được gọi
-  //   fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setDocument(data.data);
-  //       const linkDownload = data.data.linkDownload;
-  //       const fileExtension = linkDownload.split(".").pop().toLowerCase();
-  //       if (fileExtension === "pdf") {
-  //         setViewerUrl(linkDownload);
-  //       } else if (fileExtension === "docx" || fileExtension === "doc") {
-  //         setViewerUrl(
-  //           `https://docs.google.com/gview?url=${encodeURIComponent(
-  //             linkDownload
-  //           )}&embedded=true`
-  //         );
-  //       } else {
-  //         console.error("Unsupported file type");
-  //       }
-  //       setLoading(false); // Kết thúc loading khi dữ liệu được load xong
-  //     });
-  // }, [examId]);
   useEffect(() => {
     setLoading(true);
+
     fetch(`${API_BASE_URL}/api/Document/ById/${projectId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.data) {
-          setDocument(data.data);
-          const linkDownload = data.data.linkDownload;
-          const fileExtension = linkDownload.split(".").pop().toLowerCase();
-          if (fileExtension === "pdf") {
-            setViewerUrl(linkDownload);
-          } else if (fileExtension === "docx" || fileExtension === "doc") {
-            setViewerUrl(
-              `https://docs.google.com/gview?url=${encodeURIComponent(
-                linkDownload
-              )}&embedded=true`
-            );
-          } else {
-            console.error("Unsupported file type");
-          }
-        } else {
-          navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu document là null
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu có lỗi
+        setDocument(data.data);
       });
-  }, [projectId, API_BASE_URL, navigate]);
+
+    fetch(`${API_BASE_URL}/api/Document/ByIdSubject/${document?.idSubject}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setListDocuments(data.data);
+      });
+
+    fetch(`${API_BASE_URL}/api/Subject/ById/${document?.idSubject}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSubject(data.data);
+      });
+    setLoading(false);
+  }, [projectId, document]);
   if (loading) {
     return (
       <div
@@ -130,7 +101,10 @@ function ProjectDetail() {
     );
   }
 
-  const formattedDate = formatDate(document.createDate);
+  const formattedDate = formatDate(document?.createDate);
+  if (!document) {
+    return <h1>Error 404: Document not found</h1>;
+  }
   return (
     <>
       <nav
@@ -159,7 +133,7 @@ function ProjectDetail() {
             <span>/</span>
           </li>
           <li>
-            <span className="font-bold">{document.title}</span>
+            <span className="font-bold">{document?.title}</span>
           </li>
         </ol>
       </nav>
@@ -171,7 +145,7 @@ function ProjectDetail() {
               className="text-4xl  mb-4"
               style={{ fontWeight: "600", color: "#0A0A0A" }}
             >
-              💡{document.title}
+              💡{document?.title}
             </h1>
             <p
               className="text-gray-800"
@@ -179,7 +153,7 @@ function ProjectDetail() {
             >
               Tải lên bởi{" "}
               <span className="font-bold" style={{ color: "#48DA7D" }}>
-                {document.nameAuthor}
+                {document?.nameAuthor}
               </span>{" "}
               vào <span>{formattedDate}</span>
             </p>
@@ -244,84 +218,7 @@ function ProjectDetail() {
               </div>
             </div>
 
-            <div className=" mt-2">
-              <div className="flex items-center space-x-8">
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-school fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.nameSchool}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-book fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.nameSubject}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-calendar-days fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.yearSchool}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-eye fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.view}
-                  </a>
-                </div>
-              </div>
-            </div>
-            <p className=" mb-4 mt-5" style={{ color: "#4D5966" }}>
-              {document.description}
-            </p>
-
-            <div style={{ width: "full", marginTop: "20px" }}>
-              <img src={document.image} alt="Document" className="rounded-lg" />
-            </div>
-
-            <div
-              style={{
-                marginTop: "20px",
-                backgroundColor: "black",
-                padding: "10px",
-                borderRadius: "10px",
-              }}
-            >
-              <GoogleDriveViewer url={document.linkView} />
-            </div>
-
-            <div className="flex items-center justify-center mt-4">
-              <GoogleDriveDownloader url={document.linkDownload} />
-            </div>
+            <DocumentBody document={document} />
 
             <div
               id="alert-additional-content-3"
@@ -358,28 +255,14 @@ function ProjectDetail() {
                   ></i>
                   nguyenduongthevi@gmail.com
                 </button>
-                {/* <button
-                type="button"
-                className="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800"
-                data-dismiss-target="#alert-additional-content-3"
-                aria-label="Close"
-              >
-                Dismiss
-              </button> */}
               </div>
             </div>
           </div>
-          <div className="md:col-span-1">
-            <h2 className="text-xl font-bold mb-4">Related Documents</h2>
-            {/* Render related documents here */}
-            {/* For example: */}
-            {/* {document.relatedDocuments.map((relatedDoc) => (
-    <div key={relatedDoc.id} className="border p-4 mb-4">
-      <h3 className="text-lg font-bold">{relatedDoc.title}</h3>
-      <p className="text-gray-600">{relatedDoc.description}</p>
-    </div>
-    ))} */}
-          </div>
+          <RelatedDocuments
+            subject={subject}
+            listDocuments={listDocuments}
+            documentId={projectId}
+          />
         </div>
         <ToastContainer />
       </div>

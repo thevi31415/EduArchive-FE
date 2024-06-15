@@ -4,7 +4,9 @@ import { ClipLoader } from "react-spinners";
 import GoogleDriveViewer from "../component/GoogleDriveViewer";
 import GoogleDriveDownloader from "./GoogleDriveDownloader";
 import { ToastContainer, toast } from "react-toastify";
+import RelatedDocuments from "../component/RelatedDocuments";
 
+import DocumentBody from "./DocumentBody";
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -19,11 +21,11 @@ import {
 } from "react-share";
 function ExamDetail() {
   const currentUrl = window.location.href;
-  const googleDriveUrl =
-    "https://drive.google.com/file/d/14nR6-rGZFeXvn8Hrq44BiCn6YhXqa5Xd/view";
+
   const { examId } = useParams();
   const navigate = useNavigate();
-
+  const [subject, setSubject] = useState(null);
+  const [listDocuments, setListDocuments] = useState([]);
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -66,33 +68,26 @@ function ExamDetail() {
   };
   useEffect(() => {
     setLoading(true);
+
     fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.data) {
-          setDocument(data.data);
-          const linkDownload = data.data.linkDownload;
-          const fileExtension = linkDownload.split(".").pop().toLowerCase();
-          if (fileExtension === "pdf") {
-            setViewerUrl(linkDownload);
-          } else if (fileExtension === "docx" || fileExtension === "doc") {
-            setViewerUrl(
-              `https://docs.google.com/gview?url=${encodeURIComponent(
-                linkDownload
-              )}&embedded=true`
-            );
-          } else {
-            console.error("Unsupported file type");
-          }
-        } else {
-          navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu document là null
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu có lỗi
+        setDocument(data.data);
       });
-  }, [examId, API_BASE_URL, navigate]);
+
+    fetch(`${API_BASE_URL}/api/Document/ByIdSubject/${document?.idSubject}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setListDocuments(data.data);
+      });
+
+    fetch(`${API_BASE_URL}/api/Subject/ById/${document?.idSubject}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSubject(data.data);
+      });
+    setLoading(false);
+  }, [examId, document]);
   if (loading) {
     return (
       <div
@@ -108,6 +103,23 @@ function ExamDetail() {
     );
   }
 
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <ClipLoader size={100} color={"#00F5A2"} loading={loading} />
+      </div>
+    );
+  }
+  if (!document) {
+    return <h1>Error 404: Document not found</h1>;
+  }
   const formattedDate = formatDate(document.createDate);
   return (
     <>
@@ -223,84 +235,7 @@ function ExamDetail() {
               </div>
             </div>
 
-            <div className=" mt-2">
-              <div className="flex items-center space-x-8">
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-school fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.nameSchool}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-book fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.nameSubject}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-calendar-days fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.yearSchool}
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  <i
-                    className="fa-solid fa-eye fa-lg  mr-2"
-                    style={{ color: "#2F3E4E" }}
-                  ></i>
-                  <a
-                    href="#"
-                    className="text-lg font-semibold relative hover:underline"
-                    style={{ color: "#48DA7D" }}
-                  >
-                    {document.view}
-                  </a>
-                </div>
-              </div>
-            </div>
-            <p className=" mb-4 mt-5" style={{ color: "#4D5966" }}>
-              {document.description}
-            </p>
-
-            <div style={{ width: "full", marginTop: "20px" }}>
-              <img src={document.image} alt="Document" className="rounded-lg" />
-            </div>
-
-            <div
-              style={{
-                marginTop: "20px",
-                backgroundColor: "black",
-                padding: "10px",
-                borderRadius: "10px",
-              }}
-            >
-              <GoogleDriveViewer url={document.linkView} />
-            </div>
-
-            <div className="flex items-center justify-center mt-4">
-              <GoogleDriveDownloader url={document.linkDownload} />
-            </div>
+            <DocumentBody document={document} />
 
             <div
               id="alert-additional-content-3"
@@ -337,28 +272,14 @@ function ExamDetail() {
                   ></i>
                   nguyenduongthevi@gmail.com
                 </button>
-                {/* <button
-                type="button"
-                className="text-green-800 bg-transparent border border-green-800 hover:bg-green-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-green-600 dark:border-green-600 dark:text-green-400 dark:hover:text-white dark:focus:ring-green-800"
-                data-dismiss-target="#alert-additional-content-3"
-                aria-label="Close"
-              >
-                Dismiss
-              </button> */}
               </div>
             </div>
           </div>
-          <div className="md:col-span-1">
-            <h2 className="text-xl font-bold mb-4">Related Documents</h2>
-            {/* Render related documents here */}
-            {/* For example: */}
-            {/* {document.relatedDocuments.map((relatedDoc) => (
-    <div key={relatedDoc.id} className="border p-4 mb-4">
-      <h3 className="text-lg font-bold">{relatedDoc.title}</h3>
-      <p className="text-gray-600">{relatedDoc.description}</p>
-    </div>
-    ))} */}
-          </div>
+          <RelatedDocuments
+            subject={subject}
+            listDocuments={listDocuments}
+            documentId={examId}
+          />
         </div>
         <ToastContainer />
       </div>
