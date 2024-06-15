@@ -161,8 +161,9 @@ function ExamDetail() {
               </span>{" "}
               vào <span>{formattedDate}</span>
             </p>
-            <div className="flex justify-between mt-3 mb-3">
-              <div className="space-x-2">
+
+            <div className="flex flex-col md:flex-row justify-between mt-3 mb-3">
+              <div className="flex justify-center space-x-2 mb-3 md:mb-0">
                 <FacebookShareButton
                   url={currentUrl}
                   quote={"EduArchive"}
@@ -196,25 +197,28 @@ function ExamDetail() {
                   <EmailIcon size={32} round />
                 </EmailShareButton>
               </div>
-              <div className="space-x-2" style={{ color: "#48DA7D" }}>
+              <div
+                className="flex justify-center space-x-2"
+                style={{ color: "#48DA7D" }}
+              >
                 <button
                   onClick={copyToClipboard}
-                  className="font-bold py-2 px-3 "
+                  className="font-bold py-2 px-3"
                   style={{ fontSize: "26px" }}
                 >
-                  <i class="fa-solid fa-copy"></i>
+                  <i className="fa-solid fa-copy"></i>
                 </button>
                 <button
-                  className="font-bold py-2 px-3 "
+                  className="font-bold py-2 px-3"
                   style={{ fontSize: "26px" }}
                 >
-                  <i class="fa-solid fa-bookmark"></i>
+                  <i className="fa-solid fa-bookmark"></i>
                 </button>
                 <button
-                  className="font-bold py-2 px-3 "
+                  className="font-bold py-2 px-3"
                   style={{ fontSize: "26px" }}
                 >
-                  <i class="fa-solid fa-heart"></i> 0
+                  <i className="fa-solid fa-heart"></i> 0
                 </button>
               </div>
             </div>
