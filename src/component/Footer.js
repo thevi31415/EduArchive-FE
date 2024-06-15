@@ -49,18 +49,19 @@ function Footer() {
                 </a>
               </li>
             </ul>
-            <p className="mt-4  text-gray-700 lg:mt-0">
-              Created by{" "}
+            <p
+              className="mt-4 text-gray-700 lg:mt-0"
+              style={{ fontWeight: "400" }}
+            >
+              © 2024 EduArchive | Website developed by{" "}
               <a
                 href="https://github.com/thevi31415/"
                 rel="noreferrer"
                 target="_blank"
-                style={{
-                  color: "#48DA7D",
-                }}
+                style={{ color: "#48DA7D" }}
                 className="inline-block font-medium hover:text-gray-900"
               >
-                Nguyen Duong The Vi
+                {" Nguyen Duong The Vi"}
               </a>
             </p>
           </div>
