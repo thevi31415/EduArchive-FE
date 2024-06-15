@@ -87,7 +87,7 @@ function Document() {
           <div className="relative flex-1 max-w-xl mt-4 sm:mt-0 w-full sm:w-auto flex justify-end">
             <div className="relative  max-w-xl" style={{ width: "100%" }}>
               <input
-                placeholder="Tìm kiếm đề thi..."
+                placeholder="Tìm kiếm tài liệu..."
                 className="rounded-full w-full h-16 bg-transparent py-1 pl-8 pr-10 outline-none border-2 border-gray-100 shadow-md hover:outline-none focus:ring-green-200 focus:border-green-200"
                 type="text"
                 name="query"
