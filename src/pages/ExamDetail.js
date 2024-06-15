@@ -67,27 +67,40 @@ function ExamDetail() {
     return `${month} ${day}, ${year}`;
   };
   useEffect(() => {
-    setLoading(true);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const documentRes = await fetch(
+          `${API_BASE_URL}/api/Document/ById/${examId}`
+        );
+        const documentData = await documentRes.json();
+        setDocument(documentData.data);
 
-    fetch(`${API_BASE_URL}/api/Document/ById/${examId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDocument(data.data);
-      });
+        if (documentData.data?.idSubject) {
+          const [subjectRes, listDocumentsRes] = await Promise.all([
+            fetch(
+              `${API_BASE_URL}/api/Subject/ById/${documentData.data.idSubject}`
+            ),
+            fetch(
+              `${API_BASE_URL}/api/Document/ByIdSubject/${documentData.data.idSubject}`
+            ),
+          ]);
 
-    fetch(`${API_BASE_URL}/api/Document/ByIdSubject/${document?.idSubject}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setListDocuments(data.data);
-      });
+          const subjectData = await subjectRes.json();
+          const listDocumentsData = await listDocumentsRes.json();
 
-    fetch(`${API_BASE_URL}/api/Subject/ById/${document?.idSubject}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSubject(data.data);
-      });
-    setLoading(false);
-  }, [examId, document]);
+          setSubject(subjectData.data);
+          setListDocuments(listDocumentsData.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [examId]);
   if (loading) {
     return (
       <div

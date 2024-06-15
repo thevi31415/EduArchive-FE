@@ -29,26 +29,40 @@ function DocumentDetail() {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    setLoading(true); // Bắt đầu loading khi useEffect được gọi
-    fetch(`${API_BASE_URL}/api/Document/ById/${documentId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDocument(data.data);
-      });
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const documentRes = await fetch(
+          `${API_BASE_URL}/api/Document/ById/${documentId}`
+        );
+        const documentData = await documentRes.json();
+        setDocument(documentData.data);
 
-    fetch(`${API_BASE_URL}/api/Document/ByIdSubject/${document?.idSubject}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setListDocuments(data.data);
-      });
+        if (documentData.data?.idSubject) {
+          const [subjectRes, listDocumentsRes] = await Promise.all([
+            fetch(
+              `${API_BASE_URL}/api/Subject/ById/${documentData.data.idSubject}`
+            ),
+            fetch(
+              `${API_BASE_URL}/api/Document/ByIdSubject/${documentData.data.idSubject}`
+            ),
+          ]);
 
-    fetch(`${API_BASE_URL}/api/Subject/ById/${document?.idSubject}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSubject(data.data);
-      });
-    setLoading(false);
-  }, [documentId, document]);
+          const subjectData = await subjectRes.json();
+          const listDocumentsData = await listDocumentsRes.json();
+
+          setSubject(subjectData.data);
+          setListDocuments(listDocumentsData.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [documentId]);
 
   if (loading) {
     return (
