@@ -13,3 +13,14 @@
   align-items: center;
   z-index: 999; /* Đảm bảo lớp mờ nằm phía trên */
 }
+.gradient-background {
+  /* background: linear-gradient(to bottom right, #a3f1a3, #0ecf68); */
+  /* Thay đổi hướng gradient nếu cần */
+  /* background: linear-gradient(to bottom, #223340, #00B04F); */
+  /* background: linear-gradient(to right, #223340, #00B04F); */
+  /* background: linear-gradient(to top right, #223340, #00B04F); */
+  /* background: linear-gradient(to top, #223340, #00B04F); */
+  /* background: linear-gradient(to top left, #223340, #00B04F); */
+  /* background: linear-gradient(to left, #223340, #00B04F); */
+  /* background: linear-gradient(to bottom left, #223340, #00B04F); */
+}
