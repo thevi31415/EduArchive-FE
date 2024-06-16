@@ -5,6 +5,7 @@ import GoogleDriveViewer from "../component/GoogleDriveViewer";
 import GoogleDriveDownloader from "./GoogleDriveDownloader";
 import { ToastContainer, toast } from "react-toastify";
 import RelatedDocuments from "../component/RelatedDocuments";
+import { Tooltip } from "react-tooltip";
 
 import DocumentBody from "./DocumentBody";
 import {

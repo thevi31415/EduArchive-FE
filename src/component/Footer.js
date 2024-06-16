@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white">
+    <footer className="border-t border-gray-200 bg-white mt-6">
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:py-12">
         <a href="/">
           <div className="inline-flex gap-1.5 text-lg">

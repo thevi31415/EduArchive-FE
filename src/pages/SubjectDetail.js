@@ -58,7 +58,20 @@ function SubjectDetail() {
       </div>
     );
   }
-
+  if (!subject) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <ClipLoader size={100} color={"#00F5A2"} loading={true} />
+      </div>
+    );
+  }
   return (
     <>
       <nav
@@ -154,7 +167,10 @@ function SubjectDetail() {
           {/* Cột bên trái */}
           <div className="col-span-2 space-y-6">
             {/* Mục Giới thiệu */}
-            <div className="rounded-2xl gradient-background border-2 p-6">
+            <div
+              className="rounded-2xl gradient-background p-6"
+              style={{ borderWidth: "1px" }}
+            >
               <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
                 <i className="fa-solid fa-circle-info mr-2 text-green-500"></i>
                 Giới thiệu
@@ -163,7 +179,10 @@ function SubjectDetail() {
             </div>
 
             {/* Mục Tài liệu */}
-            <div className="rounded-2xl gradient-background border-2 p-6">
+            <div
+              className="rounded-2xl gradient-background p-6"
+              style={{ borderWidth: "1px" }}
+            >
               <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
                 <i className="fa-solid fa-folder mr-2 text-green-500"></i>Tài
                 liệu
@@ -202,7 +221,10 @@ function SubjectDetail() {
             </div>
 
             {/* Mục Đề thi */}
-            <div className="rounded-2xl gradient-background border-2 p-6">
+            <div
+              className="rounded-2xl gradient-background  p-6"
+              style={{ borderWidth: "1px" }}
+            >
               <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
                 <i className="fa-solid fa-folder mr-2 text-green-500"></i>Đề thi
               </p>
@@ -240,7 +262,10 @@ function SubjectDetail() {
             </div>
 
             {/* Mục Đồ án */}
-            <div className="rounded-2xl gradient-background border-2 p-6">
+            <div
+              className="rounded-2xl gradient-background  p-6"
+              style={{ borderWidth: "1px" }}
+            >
               <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
                 <i className="fa-solid fa-folder mr-2 text-green-500"></i>Đồ án
               </p>
@@ -279,7 +304,10 @@ function SubjectDetail() {
           </div>
 
           {/* Cột bên phải */}
-          <div className="col-span-1 md:ml-6 md:mt-0 mt-6 border-2 rounded-2xl">
+          <div
+            className="col-span-1 md:ml-6 md:mt-0 mt-6  rounded-2xl"
+            style={{ borderWidth: "1px" }}
+          >
             <div className="h-full  rounded-2xl p-6  items-center">
               {/* <div className="rounded-2xl gradient-background border-2 p-6">
                 <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">

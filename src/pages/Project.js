@@ -5,22 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 
 import ProjectCard from "../component/ProjectCard";
 function Project() {
-  // const [documents, setDocuments] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
-  // useEffect(() => {
-  //   fetch(`${API_BASE_URL}/api/document/ByType/DoAn`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setDocuments(data.data);
-  //       setLoading(false); // Khi dữ liệu đã được tải xong, đặt loading thành false
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching documents:", error);
-  //       setLoading(false); // Xử lý lỗi: đặt loading thành false
-  //     });
-  // }, []);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");

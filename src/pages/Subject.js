@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ClipLoader } from "react-spinners"; // import ClipLoader từ react-spinners
-
+import { Tooltip } from "react-tooltip";
 function Subject() {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(8);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const truncateName = (name) => {
+    return name.length > 17 ? name.substring(0, 14) + "..." : name;
+  };
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/Subject`)
@@ -64,6 +67,7 @@ function Subject() {
           </div>
         </div>
       </section>
+
       <div style={{ marginLeft: "20px", marginRight: "20px" }}>
         <div style={{ position: "relative" }}>
           {loading && (
@@ -83,43 +87,70 @@ function Subject() {
               <ClipLoader color={"#60B557"} loading={loading} size={100} />
             </div>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-1 px-4">
             {subjects.slice(0, visibleCount).map((subject) => (
-              <div
-                key={subject.id}
-                className="bg-white rounded-lg p-4 hover:bg-green-100 transition duration-300 ease-in-out"
-                style={{
-                  borderWidth: "0px",
-                  margin: "10px",
-                  padding: "20px",
-                  borderColor: "#45D679",
-                }}
+              <a
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={
+                  subject.description.substring(0, 120) + "..."
+                }
+                data-tooltip-place="top"
               >
-                <Link
-                  to={`/subject/${subject.id}`}
-                  className="flex items-center space-x-4"
+                <div
+                  key={subject.id}
+                  className="bg-white rounded-lg p-4 hover:bg-green-100 transition duration-300 ease-in-out shadow-md border border-[#dee0e2] hover:border-[#3FDC85]"
+                  style={{
+                    margin: "10px",
+                    padding: "20px",
+                  }}
                 >
-                  <i
-                    className="fa-solid fa-book fa-2xl"
-                    style={{ color: "#40D174" }}
-                  ></i>
-                  <div>
-                    <h2
-                      className="text-lg font-semibold"
+                  <Link
+                    to={`/subject/${subject.id}`}
+                    className="flex items-center space-x-4"
+                  >
+                    <img
+                      src={subject.avartar}
+                      className="rounded-lg object-cover border-4 border-white shadow-md"
                       style={{
-                        color: "#40D174",
-                        fontSize: "25px",
-                        fontWeight: "500",
+                        width: "70px",
+                        height: "70px",
                       }}
-                    >
-                      {subject.name}
-                    </h2>
-                    <p style={{}}>{subject.code}</p>
-                  </div>
-                </Link>
-              </div>
+                    />
+                    <div>
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={subject.name}
+                        data-tooltip-place="top"
+                      >
+                        <h2
+                          className="text-lg font-semibold"
+                          style={{
+                            color: "#3FDC85",
+                            fontSize: "23px",
+                            fontWeight: "450",
+                          }}
+                        >
+                          {truncateName(subject.name)}
+                        </h2>
+                      </a>
+
+                      <p
+                        style={{
+                          marginTop: "5px",
+                          color: "#747A82",
+                          fontWeight: "400",
+                        }}
+                      >
+                        {subject.code}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </a>
             ))}
           </div>
+          <Tooltip id="my-tooltip" />
           {visibleCount < subjects.length && (
             <div className="flex justify-center mt-4">
               <button
