@@ -20,7 +20,9 @@ const ProjectCard = ({ document }) => {
       documentTypeTag = "Không xác định";
       documentTypeColor = "#000000"; // Black color
   }
-
+  const truncateName = (name, size) => {
+    return name.length > size ? name.substring(0, size) + "..." : name;
+  };
   return (
     <div className="max-w-sm mx-auto rounded-lg overflow-hidden shadow-md bg-white m-4 transition duration-300 transform hover:scale-105">
       <div>
@@ -39,7 +41,7 @@ const ProjectCard = ({ document }) => {
             fontWeight: "500",
           }}
         >
-          💡{document.title}
+          💡{truncateName(document.title, 45)}
         </h2>
         <div
           className="flex items-center text-gray-700 mb-1"
@@ -55,7 +57,7 @@ const ProjectCard = ({ document }) => {
           <div className="flex items-center" style={{ color: "#9CA3B2" }}>
             <i className="fa-solid fa-book"></i>
             <span className="ml-2" style={{ color: "#9CA3B2" }}>
-              {document.nameSubject}
+              {truncateName(document.nameSubject, 14)}
             </span>
           </div>
           <div className="flex items-center" style={{ color: "#9CA3B2" }}>

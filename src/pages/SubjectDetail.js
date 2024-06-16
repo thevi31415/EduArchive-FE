@@ -6,6 +6,8 @@ import DocumentCard from "../component/DocumentCard";
 import { ToastContainer, toast } from "react-toastify";
 import ExamCard from "../component/ExamCard";
 import ProjectCard from "../component/ProjectCard";
+import { Tooltip } from "react-tooltip";
+
 function SubjectDetail() {
   const { subjectId } = useParams();
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ function SubjectDetail() {
   const [loading, setLoading] = useState(true);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [documents, setDocuments] = useState([]);
+  const [listSubject, setListSubject] = useState([]);
   useEffect(() => {
     // Fetch subject details
     fetch(`${API_BASE_URL}/api/Subject/ById/${subjectId}`)
@@ -28,14 +31,23 @@ function SubjectDetail() {
         navigate("/notfound"); // Chuyển hướng đến trang NotFound nếu có lỗi
       });
 
+    fetch(`${API_BASE_URL}/api/Subject/GetRandomSubject`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status !== true) {
+        } else {
+          setListSubject(data.data);
+        }
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
     fetch(`${API_BASE_URL}/api/Document/search?idSubject=${subjectId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status !== true) {
-          toast.error("Không thể tìm kiếm !");
         } else {
           setDocuments(data.data);
-          toast.success("Tìm kiếm thành công !");
         }
       })
       .catch((error) => {
@@ -72,6 +84,9 @@ function SubjectDetail() {
       </div>
     );
   }
+  const truncateName = (name) => {
+    return name.length > 17 ? name.substring(0, 14) + "..." : name;
+  };
   return (
     <>
       <nav
@@ -132,7 +147,7 @@ function SubjectDetail() {
             <div className="flex flex-col text-center md:text-left">
               <h1
                 className=" text-3xl"
-                style={{ color: "#191919", fontWeight: "500" }}
+                style={{ color: "#3FDC85", fontWeight: "500" }}
               >
                 {subject?.name}
               </h1>
@@ -149,15 +164,24 @@ function SubjectDetail() {
               style={{ fontSize: "23px" }}
             >
               <div className="flex items-center space-x-1">
-                <i className="fa-solid fa-file text-green-500"></i>
+                <i
+                  className="fa-solid fa-file"
+                  style={{ color: "#3FDC85" }}
+                ></i>
                 <span className="font-bold">{subject?.document}</span>
               </div>
               <div className="flex items-center space-x-1">
-                <i className="fa-solid fa-eye text-green-500"></i>
+                <i
+                  className="fa-solid fa-eye "
+                  style={{ color: "#3FDC85" }}
+                ></i>
                 <span className="font-bold">{subject?.view}</span>
               </div>
               <div className="flex items-center space-x-1">
-                <i className="fa-solid fa-heart text-green-500"></i>
+                <i
+                  className="fa-solid fa-heart"
+                  style={{ color: "#3FDC85" }}
+                ></i>
                 <span className="font-bold">{subject?.like}</span>
               </div>
             </div>
@@ -171,8 +195,14 @@ function SubjectDetail() {
               className="rounded-2xl gradient-background p-6"
               style={{ borderWidth: "1px" }}
             >
-              <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
-                <i className="fa-solid fa-circle-info mr-2 text-green-500"></i>
+              <p
+                className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4"
+                style={{ fontSize: "23px" }}
+              >
+                <i
+                  className="fa-solid fa-circle-info mr-2 "
+                  style={{ color: "#3FDC85" }}
+                ></i>
                 Giới thiệu
               </p>
               <p className="text-gray-800">{subject?.description}</p>
@@ -183,9 +213,15 @@ function SubjectDetail() {
               className="rounded-2xl gradient-background p-6"
               style={{ borderWidth: "1px" }}
             >
-              <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
-                <i className="fa-solid fa-folder mr-2 text-green-500"></i>Tài
-                liệu
+              <p
+                className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4"
+                style={{ fontSize: "23px" }}
+              >
+                <i
+                  className="fa-solid fa-folder mr-2"
+                  style={{ color: "#3FDC85" }}
+                ></i>
+                Tài liệu
               </p>
               {documents.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -225,8 +261,15 @@ function SubjectDetail() {
               className="rounded-2xl gradient-background  p-6"
               style={{ borderWidth: "1px" }}
             >
-              <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
-                <i className="fa-solid fa-folder mr-2 text-green-500"></i>Đề thi
+              <p
+                className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4"
+                style={{ fontSize: "23px" }}
+              >
+                <i
+                  className="fa-solid fa-file mr-2 "
+                  style={{ color: "#3FDC85" }}
+                ></i>
+                Đề thi
               </p>
               {documents.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -266,8 +309,15 @@ function SubjectDetail() {
               className="rounded-2xl gradient-background  p-6"
               style={{ borderWidth: "1px" }}
             >
-              <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
-                <i className="fa-solid fa-folder mr-2 text-green-500"></i>Đồ án
+              <p
+                className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4"
+                style={{ fontSize: "23px" }}
+              >
+                <i
+                  className="fa-solid fa-graduation-cap mr-2"
+                  style={{ color: "#3FDC85" }}
+                ></i>
+                Đồ án
               </p>
               {documents.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
@@ -304,18 +354,13 @@ function SubjectDetail() {
           </div>
 
           {/* Cột bên phải */}
+          <Tooltip id="my-tooltip" />
+
           <div
             className="col-span-1 md:ml-6 md:mt-0 mt-6  rounded-2xl"
             style={{ borderWidth: "1px" }}
           >
             <div className="h-full  rounded-2xl p-6  items-center">
-              {/* <div className="rounded-2xl gradient-background border-2 p-6">
-                <p className="text-gray-800 text-center md:text-left text-lg font-semibold mb-4">
-                  <i className="fa-solid fa-folder mr-2 text-green-500"></i>Đồ
-                  án
-                </p>
-                <p className="text-gray-800">{subject?.description}</p>
-              </div> */}
               <div className="relative flex-1 max-w-xl mt-4 sm:mt-0 w-full sm:w-auto flex justify-end">
                 <div className="relative  max-w-xl" style={{ width: "100%" }}>
                   <input
@@ -347,6 +392,69 @@ function SubjectDetail() {
                     Search
                   </button>
                 </div>
+              </div>
+              <div style={{ marginTop: "40px" }}>
+                {listSubject.map((subject) => (
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={
+                      subject.description.substring(0, 120) + "..."
+                    }
+                    data-tooltip-place="top"
+                  >
+                    <div
+                      key={subject.id}
+                      className="bg-white rounded-lg p-4 hover:bg-green-100 transition duration-300 ease-in-out shadow-md border border-[#dee0e2] hover:border-[#3FDC85]"
+                      style={{
+                        margin: "10px",
+                        padding: "20px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Link
+                        to={`/subject/${subject.id}`}
+                        className="flex items-center space-x-4"
+                      >
+                        <img
+                          src={subject.avartar}
+                          className="rounded-lg object-cover border-4 border-white shadow-md"
+                          style={{
+                            width: "70px",
+                            height: "70px",
+                          }}
+                        />
+                        <div>
+                          <a
+                            data-tooltip-id="my-tooltip"
+                            data-tooltip-content={subject.name}
+                            data-tooltip-place="top"
+                          >
+                            <h2
+                              className="text-lg font-semibold"
+                              style={{
+                                color: "#3FDC85",
+                                fontSize: "23px",
+                                fontWeight: "450",
+                              }}
+                            >
+                              {truncateName(subject.name)}
+                            </h2>
+                          </a>
+
+                          <p
+                            style={{
+                              marginTop: "5px",
+                              color: "#747A82",
+                              fontWeight: "400",
+                            }}
+                          >
+                            {subject.code}
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
