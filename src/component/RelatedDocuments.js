@@ -18,7 +18,7 @@ const RelatedDocuments = ({ subject, listDocuments, documentId }) => {
         Related Documents
       </h2>
       <div
-        className="border p-4 mb-4 mx-4 md:mx-auto md:max-w-md lg:max-w-lg"
+        className="border p-4 mb-4 mx-4 md:mx-auto md:max-w-md lg:max-w-lg w-full"
         style={{ borderRadius: "10px" }}
       >
         <a

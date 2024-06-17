@@ -12,7 +12,6 @@ function Document() {
 
   useEffect(() => {
     if (searchText.trim() === "") {
-      // Nếu không có searchText thì load lại danh sách đồ án theo loại
       fetch(`${API_BASE_URL}/api/document/ByType/TaiLieu`)
         .then((res) => res.json())
         .then((data) => {
