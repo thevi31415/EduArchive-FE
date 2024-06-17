@@ -10,7 +10,7 @@ const AddDocument = () => {
     title: "",
     description: "",
     typeDocument: "",
-    nameAuthor: localStorage.getItem("useName") || "",
+    nameAuthor: localStorage.getItem("userName") || "",
     idAuthor: localStorage.getItem("userId") || "",
     userAuthor: localStorage.getItem("userName") || "",
     image: "",
@@ -48,7 +48,9 @@ const AddDocument = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    // Trim whitespace from value
+    const trimmedValue = value.trim();
+    setFormData({ ...formData, [name]: trimmedValue });
   };
 
   const handleAddDocument = () => {
@@ -101,7 +103,7 @@ const AddDocument = () => {
         setSuccess(true);
       })
       .catch((error) => {
-        toast.error("Đã xảy ra lỗi !");
+        toast.error("Đã xảy ra lỗi !" + error);
         console.error("Error adding document:", error);
         setLoading(false);
         setSuccess(false);
