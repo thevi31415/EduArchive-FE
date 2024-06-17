@@ -3,69 +3,101 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { format } from "date-fns";
 import { ClipLoader } from "react-spinners";
+import { Link } from "react-router-dom";
+import { Tooltip } from "react-tooltip";
 
 function formatDate(date) {
   return format(new Date(date), "HH:mm:ss, dd/MM/yyyy");
 }
 
 function Profile() {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const truncateName = (name) => {
+    return name?.length > 17 ? name?.substring(0, 14) + "..." : name;
+  };
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [listFollowSubjects, setListFollowSubjects] = useState([]);
+
+  const [listSubject, setListSubject] = useState([]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
 
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    subtitle.style.color = "#f00";
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    const idGoogle = localStorage.getItem("idGoogle");
-    const token = localStorage.getItem("token");
-    if (!userId || !idGoogle || !token) {
-      navigate("/login");
-      return;
-    }
+    const fetchData = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const idGoogle = localStorage.getItem("idGoogle");
+        const token = localStorage.getItem("token");
 
-    fetch(`${API_BASE_URL}/api/User/${userId}/${idGoogle}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
+        if (!userId || !idGoogle || !token) {
+          navigate("/login");
+          return;
+        }
+
+        const userResponse = await fetch(
+          `${API_BASE_URL}/api/User/${userId}/${idGoogle}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
+          }
+        );
+        if (!userResponse.ok) {
           throw new Error("Network response was not ok");
         }
-        return res.json();
-      })
-      .then((data) => {
-        setUser(data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user data:", error);
-      })
-      .finally(() => {
-        setLoading(false); // Kết thúc loading dù thành công hay thất bại
-      });
-  }, []);
+        const userData = await userResponse.json();
+        setUser(userData.data);
+
+        const followSubjectResponse = await fetch(
+          `${API_BASE_URL}/api/FollowSubject/GetFollowSubjectByUserId?idUser=${userId}`
+        );
+        if (!followSubjectResponse.ok) {
+          throw new Error("Failed to fetch follow subjects");
+        }
+        const followSubjectData = await followSubjectResponse.json();
+        setListFollowSubjects(followSubjectData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Run once on component mount
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        let fetchedSubjects = [];
+        for (let subjectId of listFollowSubjects) {
+          const response = await fetch(
+            `${API_BASE_URL}/api/Subject/ById/${subjectId.idSubject}`
+          );
+          const data = await response.json();
+
+          if (data.status === true) {
+            fetchedSubjects.push(data.data);
+          } else {
+            console.log(
+              `Failed to retrieve subject for subjectId ${subjectId}`
+            );
+          }
+        }
+        setListSubject(fetchedSubjects);
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
+    };
+
+    if (listFollowSubjects.length > 0) {
+      fetchSubjects();
+    }
+  }, [listFollowSubjects]);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
@@ -128,8 +160,8 @@ function Profile() {
                     src={user?.avartar}
                     className="w-32 h-32 rounded-full mb-4 border-4 border-green-400"
                   />
-                  <h1 className="text-xl font-bold">{user.name}</h1>
-                  <p className="text-gray-700">@{user.userName}</p>
+                  <h1 className="text-xl font-bold">{user?.name}</h1>
+                  <p className="text-gray-700">@{user?.userName}</p>
                   <span className="mt-3 inline-block px-2 py-1 text-green-800 font-semibold bg-green-100 rounded-full">
                     {user?.email}
                   </span>
@@ -173,7 +205,7 @@ function Profile() {
                         className="fa-solid fa-building"
                         style={{ marginRight: "10px", color: "#48DA7D" }}
                       ></i>
-                      {user.organization ? user.organization : "Chưa có"}
+                      {user?.organization ? user?.organization : "Chưa có"}
                     </li>
                     <li
                       className="mb-2"
@@ -183,7 +215,7 @@ function Profile() {
                         className="fa-solid fa-clock"
                         style={{ marginRight: "10px", color: "#48DA7D" }}
                       ></i>
-                      {formatDate(user?.createdDate)}
+                      {/* {formatDate(user?.createdDate)} */}
                     </li>
                   </ul>
                 </div>
@@ -191,14 +223,20 @@ function Profile() {
             </div>
             <div className="col-span-4 sm:col-span-9">
               <div className="bg-white shadow rounded-lg p-6 mt-0">
-                <div className="flex items-center space-x-4">
+                <div
+                  className="flex items-center space-x-4"
+                  style={{ color: "#3FDC85" }}
+                >
                   <i className="fa-solid fa-user fa-xl"></i>
                   <h2 className="text-xl font-bold">Giới thiệu</h2>
                 </div>
                 <div className="mt-4">Content</div>
               </div>
               <div className="bg-white shadow rounded-lg p-6 mt-6">
-                <div className="flex items-center space-x-4">
+                <div
+                  className="flex items-center space-x-4"
+                  style={{ color: "#3FDC85" }}
+                >
                   <i className="fa-solid fa-chart-simple fa-xl"></i>
                   <h2 className="text-xl font-bold">Thống kê</h2>
                 </div>
@@ -209,7 +247,7 @@ function Profile() {
                         className="text-2xl font-bold mb-3"
                         style={{ color: "#3FDC85", fontSize: "28px" }}
                       >
-                        0
+                        {listSubject.length}
                       </div>
                       <div style={{ fontSize: "18px", color: "#A2A9B5" }}>
                         Theo dõi
@@ -238,6 +276,79 @@ function Profile() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <Tooltip id="my-tooltip" />
+
+              <div className="bg-white shadow rounded-lg p-6 mt-6">
+                <div
+                  className="flex items-center space-x-4"
+                  style={{ color: "#3FDC85" }}
+                >
+                  <i className="fa-solid fa-book fa-xl"></i>
+                  <h2 className="text-xl font-bold">Môn học đã theo dõi</h2>
+                </div>
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+                  {listSubject && listSubject.length > 0 ? (
+                    listSubject.map((subject) => (
+                      <a
+                        key={subject.id}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={
+                          subject?.description.substring(0, 120) + "..."
+                        }
+                        data-tooltip-place="top"
+                        className="block"
+                      >
+                        <div className="bg-white rounded-lg p-4 hover:bg-green-100 transition duration-300 ease-in-out shadow-md border border-[#dee0e2] hover:border-[#3FDC85]">
+                          <Link
+                            to={`/subject/${subject.id}`}
+                            className="flex items-center space-x-4"
+                          >
+                            <img
+                              src={subject.avartar}
+                              className="rounded-lg object-cover border-4 border-white shadow-md"
+                              style={{
+                                width: "70px",
+                                height: "70px",
+                              }}
+                              alt={subject.name}
+                            />
+                            <div>
+                              <h2
+                                className="text-lg font-semibold"
+                                style={{
+                                  color: "#3FDC85",
+                                  fontSize: "1.4375rem",
+                                  fontWeight: "450",
+                                }}
+                              >
+                                {truncateName(subject.name)}
+                              </h2>
+                              <p
+                                style={{
+                                  marginTop: "5px",
+                                  color: "#747A82",
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {subject.code}
+                              </p>
+                            </div>
+                          </Link>
+                        </div>
+                      </a>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div
+                        className="text-center text-gray-500"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Chưa theo dõi môn học nào !
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
