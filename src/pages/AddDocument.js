@@ -100,7 +100,7 @@ const AddDocument = () => {
         if (data.status) {
           toast.success("Thêm tài nguyên thành công !" + data.status);
         } else {
-          toast.errors("Không thể thêm tài nguyên mới !" + data.status);
+          toast.error("Không thể thêm tài nguyên mới !" + data.status);
         }
 
         setLoading(false);
