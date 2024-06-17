@@ -48,11 +48,15 @@ const AddDocument = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Trim whitespace from value
-    const trimmedValue = value.trim();
+    let trimmedValue = value;
+
+    // Chuẩn hóa các trường LinkView, LinkDownload, LinkImage
+    if (name === "linkView" || name === "linkDownload" || name === "image") {
+      trimmedValue = value.trim();
+    }
+
     setFormData({ ...formData, [name]: trimmedValue });
   };
-
   const handleAddDocument = () => {
     // Kiểm tra các trường thông tin
     if (
