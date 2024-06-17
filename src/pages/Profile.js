@@ -125,13 +125,13 @@ function Profile() {
               <div className="bg-white shadow rounded-lg p-6">
                 <div className="flex flex-col items-center">
                   <img
-                    src={user.avartar}
+                    src={user?.avartar}
                     className="w-32 h-32 rounded-full mb-4 border-4 border-green-400"
                   />
                   <h1 className="text-xl font-bold">{user.name}</h1>
                   <p className="text-gray-700">@{user.userName}</p>
                   <span className="mt-3 inline-block px-2 py-1 text-green-800 font-semibold bg-green-100 rounded-full">
-                    {user.email}
+                    {user?.email}
                   </span>
 
                   <div className="mt-6 flex flex-wrap gap-4 justify-center">
@@ -162,7 +162,7 @@ function Profile() {
                         className="fa-solid fa-location-dot"
                         style={{ marginRight: "10px", color: "#48DA7D" }}
                       ></i>
-                      {user.address ? user.address : "Chưa có"}
+                      {user?.address ? user?.address : "Chưa có"}
                     </li>
 
                     <li
@@ -190,46 +190,54 @@ function Profile() {
               </div>
             </div>
             <div className="col-span-4 sm:col-span-9">
-              <div className="bg-white shadow rounded-lg p-6">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <button
-                    onClick={openModal}
-                    style={{
-                      fontSize: "15px",
-                      backgroundColor: "#48DA7D",
-                      padding: "10px",
-                      borderRadius: "10px",
-                      color: "white",
-                    }}
-                  >
-                    <i className="fa-solid fa-pen-to-square"></i> Chỉnh sửa
-                  </button>
+              <div className="bg-white shadow rounded-lg p-6 mt-0">
+                <div className="flex items-center space-x-4">
+                  <i className="fa-solid fa-user fa-xl"></i>
+                  <h2 className="text-xl font-bold">Giới thiệu</h2>
                 </div>
-                <h2 className="text-xl font-bold mb-4">Giới thiệu</h2>
-                <p className="text-gray-700">{user.introduction}</p>
-
-                <h2 className="text-xl font-bold mt-6 mb-4">Hoạt động</h2>
-                <div className="mb-6">
-                  <div className="flex justify-between flex-wrap gap-2 w-full">
-                    <span className="text-gray-700 font-bold">
-                      Web Developer
-                    </span>
-                    <p>
-                      <span className="text-gray-700 mr-2">at ABC Company</span>
-                      <span className="text-gray-700">2017 - 2019</span>
-                    </p>
+                <div className="mt-4">Content</div>
+              </div>
+              <div className="bg-white shadow rounded-lg p-6 mt-6">
+                <div className="flex items-center space-x-4">
+                  <i className="fa-solid fa-chart-simple fa-xl"></i>
+                  <h2 className="text-xl font-bold">Thống kê</h2>
+                </div>
+                <div className="bg-white  p-6 mt-6">
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div
+                        className="text-2xl font-bold mb-3"
+                        style={{ color: "#3FDC85", fontSize: "28px" }}
+                      >
+                        0
+                      </div>
+                      <div style={{ fontSize: "18px", color: "#A2A9B5" }}>
+                        Theo dõi
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div
+                        className="text-2xl font-bold mb-3"
+                        style={{ color: "#3FDC85", fontSize: "28px" }}
+                      >
+                        0
+                      </div>
+                      <div style={{ fontSize: "18px", color: "#A2A9B5" }}>
+                        Đã lưu
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div
+                        className="text-2xl font-bold mb-3"
+                        style={{ color: "#3FDC85", fontSize: "28px" }}
+                      >
+                        0
+                      </div>
+                      <div style={{ fontSize: "18px", color: "#A2A9B5" }}>
+                        Lượt thích
+                      </div>
+                    </div>
                   </div>
-                  <p className="mt-2">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                    finibus est vitae tortor ullamcorper, ut vestibulum velit
-                    convallis. Aenean posuere risus non velit egestas suscipit.
-                  </p>
                 </div>
               </div>
             </div>

@@ -53,7 +53,7 @@ const Login = () => {
           toast.success("Đăng nhập thành công!");
           setTimeout(() => {
             navigate("/profile");
-          }, 3000);
+          }, 1000);
         } else {
           toast.error("Đăng nhập thất bại.");
         }

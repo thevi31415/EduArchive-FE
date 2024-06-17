@@ -16,6 +16,9 @@ function SubjectDetail() {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const [documents, setDocuments] = useState([]);
   const [listSubject, setListSubject] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
     // Fetch subject details
     fetch(`${API_BASE_URL}/api/Subject/ById/${subjectId}`)
@@ -53,8 +56,82 @@ function SubjectDetail() {
       .catch((error) => {
         toast.error(error);
       });
+
+    const checkFollowStatus = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/FollowSubject?idSubject=${subjectId}&idUser=${userId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setIsFollowing(data?.status);
+        } else {
+          console.error("Error checking follow status:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error checking follow status:", error);
+      }
+    };
+
+    checkFollowStatus();
     setLoading(false);
   }, [subjectId]);
+
+  const handleFollowSubject = async () => {
+    if (isFollowing) {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/FollowSubject?idSubject=${subjectId}&idUser=${userId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Accept: "*/*",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          setIsFollowing(false);
+          toast.success("Hủy theo dõi thành công!");
+        } else if (response.status === 401 || response.status === 403) {
+          toast.warning("Vui lòng đăng nhập!");
+        } else {
+          toast.error("Đã xảy ra lỗi ");
+        }
+      } catch (error) {
+        toast.error("Đã xảy ra lỗi ");
+      }
+    } else {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/FollowSubject`, {
+          method: "POST",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            id: 0,
+            idSubject: subjectId,
+            idUser: userId,
+            status: 0,
+          }),
+        });
+
+        if (response.ok) {
+          setIsFollowing(true);
+          toast.success("Đã theo dõi thành công!");
+        } else if (response.status === 401 || response.status === 403) {
+          toast.warning("Vui lòng đăng nhập!");
+        } else {
+          toast.error("Đã xảy ra lỗi ");
+        }
+      } catch (error) {
+        toast.error("Đã xảy ra lỗi ");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -153,8 +230,20 @@ function SubjectDetail() {
               </h1>
               <p className="mt-2 text-xl  text-gray-800">{subject?.code}</p>
               <div className="flex justify-center md:justify-start mt-3 md:px-0">
-                <button className=" bg-green-400  hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg">
+                {/* <button className=" bg-green-400  hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg">
                   <i class="fa-solid fa-plus"></i> Theo dõi môn học
+                </button> */}
+                <button
+                  className={`${"bg-green-400 hover:bg-green-500"} text-white font-bold py-2 px-4 rounded-lg`}
+                  onClick={handleFollowSubject}
+                >
+                  {isFollowing ? (
+                    <i class="fa-solid fa-check"></i>
+                  ) : (
+                    <i className="fa-solid fa-plus"></i>
+                  )}
+
+                  {isFollowing ? " Đang theo dõi" : " Theo dõi"}
                 </button>
               </div>
             </div>
@@ -459,6 +548,7 @@ function SubjectDetail() {
             </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
     </>
   );

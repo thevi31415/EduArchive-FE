@@ -20,16 +20,16 @@ function Subject() {
           a.name.localeCompare(b.name)
         );
         setSubjects(sortedSubjects);
-        setLoading(false); // Khi dữ liệu đã được tải xong, đặt loading thành false
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching documents:", error);
-        setLoading(false); // Xử lý lỗi: đặt loading thành false
+        setLoading(false);
       });
   }, []);
 
   const handleLoadMore = () => {
-    setVisibleCount((prevCount) => prevCount + 8); // Load thêm 4 phần tử mỗi lần nhấn
+    setVisibleCount((prevCount) => prevCount + 8);
   };
 
   return (
