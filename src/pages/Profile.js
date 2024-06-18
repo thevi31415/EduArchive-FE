@@ -71,9 +71,9 @@ function Profile() {
         console.error("Error fetching data:", error);
         toast.error("Error fetching data");
       } finally {
+        setLoading(false);
       }
     };
-
     fetchData();
   }, []); // Run once on component mount
 
@@ -128,7 +128,6 @@ function Profile() {
     if (listBookmark.length > 0) {
       fetchDocument();
     }
-    setLoading(false);
   }, [listFollowSubjects, listBookmark]);
 
   const handleLogout = () => {
