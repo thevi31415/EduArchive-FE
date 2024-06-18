@@ -18,14 +18,15 @@ import {
   TelegramIcon,
   TwitterIcon,
 } from "react-share";
+import BookmarkButton from "../component/BookmarkButton";
 function ProjectDetail() {
   const currentUrl = window.location.href;
 
   const { projectId } = useParams();
-  const navigate = useNavigate();
   const [subject, setSubject] = useState(null);
   const [listDocuments, setListDocuments] = useState([]);
-
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
   const [document, setDocument] = useState(null);
   const [loading, setLoading] = useState(true);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -228,12 +229,12 @@ function ProjectDetail() {
                 >
                   <i className="fa-solid fa-copy"></i>
                 </button>
-                <button
-                  className="font-bold py-2 px-3"
-                  style={{ fontSize: "26px" }}
-                >
-                  <i className="fa-solid fa-bookmark"></i>
-                </button>
+                <BookmarkButton
+                  documentId={projectId}
+                  userId={userId}
+                  token={token}
+                  API_BASE_URL={API_BASE_URL}
+                />
                 <button
                   className="font-bold py-2 px-3"
                   style={{ fontSize: "26px" }}

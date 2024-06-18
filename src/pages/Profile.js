@@ -5,10 +5,9 @@ import { format } from "date-fns";
 import { ClipLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-
-function formatDate(date) {
-  return format(new Date(date), "HH:mm:ss, dd/MM/yyyy");
-}
+import ExamCard from "../component/ExamCard";
+import ProjectCard from "../component/ProjectCard";
+import DocumentCard from "../component/DocumentCard";
 
 function Profile() {
   const truncateName = (name) => {
@@ -18,9 +17,9 @@ function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [listFollowSubjects, setListFollowSubjects] = useState([]);
-
+  const [listBookmark, setListBookmark] = useState([]);
   const [listSubject, setListSubject] = useState([]);
-
+  const [listDocument, setListDocument] = useState([]);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
 
@@ -59,6 +58,15 @@ function Profile() {
         }
         const followSubjectData = await followSubjectResponse.json();
         setListFollowSubjects(followSubjectData.data);
+
+        const bookmarkResponse = await fetch(
+          `${API_BASE_URL}/api/BookmarkDocument/GetBookmarkDocumentByUserId?idUser=${userId}`
+        );
+        if (!bookmarkResponse.ok) {
+          throw new Error("Failed to fetch follow subjects");
+        }
+        const bookMarkData = await bookmarkResponse.json();
+        setListBookmark(bookMarkData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         toast.error("Error fetching data");
@@ -93,11 +101,35 @@ function Profile() {
         console.error("Error fetching subjects:", error);
       }
     };
+    const fetchDocument = async () => {
+      try {
+        let fetchedDocument = [];
+        for (let documentId of listBookmark) {
+          const response = await fetch(
+            `${API_BASE_URL}/api/Document/ById/${documentId.idDocument}`
+          );
+          const data = await response.json();
 
+          if (data.status === true) {
+            fetchedDocument.push(data.data);
+          } else {
+            console.log(
+              `Failed to retrieve subject for subjectId ${documentId}`
+            );
+          }
+        }
+        setListDocument(fetchedDocument);
+      } catch (error) {
+        console.error("Error fetching subjects:", error);
+      }
+    };
     if (listFollowSubjects.length > 0) {
       fetchSubjects();
     }
-  }, [listFollowSubjects]);
+    if (listBookmark.length > 0) {
+      fetchDocument();
+    }
+  }, [listFollowSubjects, listBookmark]);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
@@ -258,7 +290,7 @@ function Profile() {
                         className="text-2xl font-bold mb-3"
                         style={{ color: "#3FDC85", fontSize: "28px" }}
                       >
-                        0
+                        {listDocument?.length}
                       </div>
                       <div style={{ fontSize: "18px", color: "#A2A9B5" }}>
                         Đã lưu
@@ -288,6 +320,24 @@ function Profile() {
                   <i className="fa-solid fa-book fa-xl"></i>
                   <h2 className="text-xl font-bold">Môn học đã theo dõi</h2>
                 </div>
+                {/* {listDocument?.map((relatedDoc) => (
+                  <div key={relatedDoc.id}>
+                    {relatedDoc.typeDocument === "DeThi" ? (
+                      <Link to={`/exam/${relatedDoc.id}`}>
+                        <ExamCard document={relatedDoc} />
+                      </Link>
+                    ) : relatedDoc.typeDocument === "DoAn" ? (
+                      <Link to={`/project/${relatedDoc.id}`}>
+                        <ProjectCard document={relatedDoc} />
+                      </Link>
+                    ) : (
+                      <Link to={`/document/${relatedDoc.id}`}>
+                        <DocumentCard document={relatedDoc} />
+                      </Link>
+                    )}
+                  </div>
+                ))} */}
+
                 <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
                   {listSubject && listSubject.length > 0 ? (
                     listSubject.map((subject) => (
@@ -346,6 +396,47 @@ function Profile() {
                         style={{ fontSize: "20px" }}
                       >
                         Chưa theo dõi môn học nào !
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white shadow rounded-lg p-6 mt-6">
+                <div
+                  className="flex items-center space-x-4"
+                  style={{ color: "#3FDC85" }}
+                >
+                  <i className="fa-solid fa-bookmark fa-xl"></i>
+                  <h2 className="text-xl font-bold">Tài liệu đã lưu</h2>
+                </div>
+
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+                  {listDocument && listDocument.length > 0 ? (
+                    listDocument?.map((relatedDoc) => (
+                      <div key={relatedDoc.id}>
+                        {relatedDoc.typeDocument === "DeThi" ? (
+                          <Link to={`/exam/${relatedDoc.id}`}>
+                            <ExamCard document={relatedDoc} />
+                          </Link>
+                        ) : relatedDoc.typeDocument === "DoAn" ? (
+                          <Link to={`/project/${relatedDoc.id}`}>
+                            <ProjectCard document={relatedDoc} />
+                          </Link>
+                        ) : (
+                          <Link to={`/document/${relatedDoc.id}`}>
+                            <DocumentCard document={relatedDoc} />
+                          </Link>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div
+                        className="text-center text-gray-500"
+                        style={{ fontSize: "20px" }}
+                      >
+                        Chưa lưu tài liệu nào !
                       </div>
                     </div>
                   )}

@@ -18,6 +18,7 @@ import {
 } from "react-share";
 import RelatedDocuments from "../component/RelatedDocuments";
 import DocumentBody from "./DocumentBody";
+import BookmarkButton from "../component/BookmarkButton";
 function DocumentDetail() {
   const currentUrl = window.location.href;
   const { documentId } = useParams();
@@ -27,7 +28,8 @@ function DocumentDetail() {
   const [loading, setLoading] = useState(true);
   const [listDocuments, setListDocuments] = useState([]);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -226,12 +228,13 @@ function DocumentDetail() {
                 >
                   <i className="fa-solid fa-copy"></i>
                 </button>
-                <button
-                  className="font-bold py-2 px-3"
-                  style={{ fontSize: "26px" }}
-                >
-                  <i className="fa-solid fa-bookmark"></i>
-                </button>
+
+                <BookmarkButton
+                  documentId={documentId}
+                  userId={userId}
+                  token={token}
+                  API_BASE_URL={API_BASE_URL}
+                />
                 <button
                   className="font-bold py-2 px-3"
                   style={{ fontSize: "26px" }}
