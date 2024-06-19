@@ -22,7 +22,7 @@ function Project() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/Document/ByType/DoAn?pageNumber=${page}&pageSize=3`
+        `${API_BASE_URL}/api/Document/ByType/DoAn?pageNumber=${page}&pageSize=8`
       );
       const result = await response.json();
       if (result.data.length > 0) {
@@ -42,7 +42,7 @@ function Project() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/Document/search?searchText=${searchText}&searchType=DoAn&pageNumber=${page}&pageSize=3`
+        `${API_BASE_URL}/api/Document/search?searchText=${searchText}&searchType=DoAn&pageNumber=${page}&pageSize=8`
       );
       const data = await response.json();
       if (data.status !== true) {
@@ -108,6 +108,30 @@ function Project() {
 
   return (
     <>
+      <nav
+        className="flex p-4 ml-4 w-full mt-5"
+        aria-label="Breadcrumb"
+        style={{ marginTop: "20px" }}
+      >
+        <ol
+          className="flex items-center space-x-4 text-green-500"
+          style={{ fontSize: "20px" }}
+        >
+          <li>
+            <a href="#" className="hover:underline">
+              <i className="fa-solid fa-house "></i> Trang chủ
+            </a>
+          </li>
+          <li>
+            <span>/</span>
+          </li>
+          <li>
+            <span className="font-bold">
+              <i className="fa-solid fa-graduation-cap"></i> Đồ án
+            </span>
+          </li>
+        </ol>
+      </nav>
       <section className="bg-white py-[10px] dark:bg-dark ml-5">
         <div className="px-4 sm:container flex flex-col sm:flex-row items-center justify-between">
           <div className="w-full sm:w-auto flex justify-start sm:justify-start">
@@ -205,11 +229,34 @@ function Project() {
             </div>
           )}
         </div>
-        {loading && <p>Loading...</p>}
-        {hasMore && !loading && (
-          <button onClick={handleLoadMore}>Load More</button>
-        )}
-        {!hasMore && <p>No more documents to load.</p>}
+        <div className="flex items-center justify-center mt-4">
+          {" "}
+          {loading ? (
+            <button
+              className="animate-bounce focus:animate-none hover:animate-none inline-flex text-md font-medium mt-3 px-4 py-2 rounded-lg tracking-wide text-white"
+              style={{ backgroundColor: "#3FDC85" }}
+              disabled
+            >
+              <span className="mr-2">
+                <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+              </span>
+            </button>
+          ) : (
+            hasMore && (
+              <button
+                onClick={handleLoadMore}
+                className="animate-bounce focus:animate-none hover:animate-none inline-flex text-md font-medium mt-3 px-4 py-2 rounded-lg tracking-wide text-white"
+                style={{ backgroundColor: "#3FDC85" }}
+              >
+                <span className="ml-2">
+                  <i className="fa-solid fa-arrow-down fa-lg"></i> Xem thêm
+                </span>
+              </button>
+            )
+          )}
+        </div>
+
+        {/* {!hasMore && <p>No more documents to load.</p>} */}
         <ToastContainer />
       </div>
     </>
