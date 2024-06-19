@@ -16,8 +16,7 @@ function Profile() {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [listFollowSubjects, setListFollowSubjects] = useState([]);
-  const [listBookmark, setListBookmark] = useState([]);
+
   const [listSubject, setListSubject] = useState([]);
   const [listDocument, setListDocument] = useState([]);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -57,7 +56,7 @@ function Profile() {
           throw new Error("Failed to fetch follow subjects");
         }
         const followSubjectData = await followSubjectResponse.json();
-        setListFollowSubjects(followSubjectData.data);
+        setListSubject(followSubjectData.data);
 
         const bookmarkResponse = await fetch(
           `${API_BASE_URL}/api/BookmarkDocument/GetBookmarkDocumentByUserId?idUser=${userId}`
@@ -66,7 +65,7 @@ function Profile() {
           throw new Error("Failed to fetch follow subjects");
         }
         const bookMarkData = await bookmarkResponse.json();
-        setListBookmark(bookMarkData.data);
+        setListDocument(bookMarkData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         toast.error("Error fetching data");
@@ -76,59 +75,6 @@ function Profile() {
     };
     fetchData();
   }, []); // Run once on component mount
-
-  useEffect(() => {
-    const fetchSubjects = async () => {
-      try {
-        let fetchedSubjects = [];
-        for (let subjectId of listFollowSubjects) {
-          const response = await fetch(
-            `${API_BASE_URL}/api/Subject/ById/${subjectId.idSubject}`
-          );
-          const data = await response.json();
-
-          if (data.status === true) {
-            fetchedSubjects.push(data.data);
-          } else {
-            console.log(
-              `Failed to retrieve subject for subjectId ${subjectId}`
-            );
-          }
-        }
-        setListSubject(fetchedSubjects);
-      } catch (error) {
-        console.error("Error fetching subjects:", error);
-      }
-    };
-    const fetchDocument = async () => {
-      try {
-        let fetchedDocument = [];
-        for (let documentId of listBookmark) {
-          const response = await fetch(
-            `${API_BASE_URL}/api/Document/ById/${documentId.idDocument}`
-          );
-          const data = await response.json();
-
-          if (data.status === true) {
-            fetchedDocument.push(data.data);
-          } else {
-            console.log(
-              `Failed to retrieve subject for subjectId ${documentId}`
-            );
-          }
-        }
-        setListDocument(fetchedDocument);
-      } catch (error) {
-        console.error("Error fetching subjects:", error);
-      }
-    };
-    if (listFollowSubjects.length > 0) {
-      fetchSubjects();
-    }
-    if (listBookmark.length > 0) {
-      fetchDocument();
-    }
-  }, [listFollowSubjects, listBookmark]);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
