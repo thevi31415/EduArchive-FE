@@ -1,91 +1,124 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { ClipLoader } from "react-spinners"; // import ClipLoader từ react-spinners
+import { useState, useEffect, useRef } from "react";
+import { ClipLoader } from "react-spinners";
 import { ToastContainer, toast } from "react-toastify";
 
 import ProjectCard from "../component/ProjectCard";
+
 function Project() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSearch, setPageSearch] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const hasFetchedOnce = useRef(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const [searchText, setSearchText] = useState("");
+  const [searchMode, setSearchMode] = useState(false);
 
-  useEffect(() => {
-    if (searchText.trim() === "") {
-      // Nếu không có searchText thì load lại danh sách đồ án theo loại
-      fetch(`${API_BASE_URL}/api/document/ByType/DoAn`)
-        .then((res) => res.json())
-        .then((data) => {
-          setDocuments(data.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching documents:", error);
-          setLoading(false);
-        });
-    } else {
-      setLoading(true);
-      fetch(
-        `${API_BASE_URL}/api/Document/search?searchText=${searchText}&searchType=DoAn`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status !== true) {
-            toast.error("Không thể tìm kiếm !");
-          } else {
-            setDocuments(data.data);
-            setLoading(false);
-            toast.success("Tìm kiếm thành công !");
-          }
-        })
-        .catch((error) => {
-          toast.error(error);
-          setLoading(false);
-        });
+  const [notificationSearch, setNotificationSearch] = useState(false);
+  // Function to fetch documents
+  const fetchDocuments = async (page) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/Document/ByType/DoAn?pageNumber=${page}&pageSize=3`
+      );
+      const result = await response.json();
+      if (result.data.length > 0) {
+        setDocuments((prevDocuments) => [...prevDocuments, ...result.data]);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [searchText]);
-
-  const handleSearch = () => {
-    // Gọi hàm tìm kiếm khi click vào nút Search
-    setSearchText(document.getElementById("query").value);
   };
+
+  // Function to fetch search results
+  const fetchSearch = async (searchText, page, checknotificationSearch) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/Document/search?searchText=${searchText}&searchType=DoAn&pageNumber=${page}&pageSize=3`
+      );
+      const data = await response.json();
+      if (data.status !== true) {
+        toast.error("Không thể tìm kiếm !");
+      } else {
+        if (data.data.length > 0) {
+          setDocuments((prevDocuments) => [...prevDocuments, ...data.data]);
+        } else {
+          setHasMore(false);
+        }
+        if (checknotificationSearch) {
+          toast.success("Tìm kiếm thành công !");
+          setNotificationSearch(false);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect to fetch data when pageNumber, searchText, or pageSearch changes
+  useEffect(() => {
+    setDocuments([]);
+    if (searchText.trim() === "") {
+      if (!hasFetchedOnce.current) {
+        fetchDocuments(pageNumber);
+        hasFetchedOnce.current = true;
+      }
+    } else {
+      fetchSearch(searchText, pageSearch, notificationSearch);
+    }
+  }, []);
+
+  // Handle load more button click
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      if (searchMode) {
+        const newPage = pageSearch + 1;
+        setPageSearch(newPage);
+        fetchSearch(searchText, newPage, false);
+      } else {
+        const newPage = pageNumber + 1;
+        setPageNumber(newPage);
+        fetchDocuments(newPage);
+      }
+    }
+  };
+
+  // Handle search button click
+  const handleSearch = () => {
+    setNotificationSearch(true);
+    const newSearchText = document.getElementById("query").value;
+    setDocuments([]);
+    setSearchText(newSearchText);
+    setPageSearch(1);
+    setSearchMode(true);
+    setHasMore(true);
+    fetchSearch(newSearchText, 1, true);
+    // setNotificationSearch(false); // Sử dụng searchText từ state để gọi fetchSearch
+  };
+
   return (
     <>
-      <nav
-        className="flex p-4 ml-4 w-full mt-5"
-        aria-label="Breadcrumb"
-        style={{ marginTop: "20px" }}
-      >
-        <ol
-          className="flex items-center space-x-4 text-green-500"
-          style={{ fontSize: "20px" }}
-        >
-          <li>
-            <a href="#" className="hover:underline">
-              <i className="fa-solid fa-house "></i> Trang chủ
-            </a>
-          </li>
-          <li>
-            <span>/</span>
-          </li>
-          <li>
-            <span className="font-bold">
-              <i className="fa-solid fa-graduation-cap"></i> Đồ án
-            </span>
-          </li>
-        </ol>
-      </nav>
       <section className="bg-white py-[10px] dark:bg-dark ml-5">
         <div className="px-4 sm:container flex flex-col sm:flex-row items-center justify-between">
           <div className="w-full sm:w-auto flex justify-start sm:justify-start">
             <div className="pl-5 border-l-4 border-green-500">
               <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">
-                Đồ án ({documents?.length})
+                Đồ án
               </h2>
             </div>
           </div>
           <div className="relative flex-1 max-w-xl mt-4 sm:mt-0 w-full sm:w-auto flex justify-end">
-            <div className="relative  max-w-xl" style={{ width: "100%" }}>
+            <div className="relative max-w-xl" style={{ width: "100%" }}>
               <input
                 placeholder="Tìm kiếm đồ án..."
                 className="rounded-full w-full h-16 bg-transparent py-1 pl-8 pr-10 outline-none border-2 border-gray-100 shadow-md hover:outline-none focus:ring-green-200 focus:border-green-200"
@@ -128,17 +161,17 @@ function Project() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                backgroundColor: "rgba(255, 255, 255, 0.5)", // Màu mờ
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 999, // Đảm bảo lớp mờ nằm phía trên
+                zIndex: 999,
               }}
             >
               <ClipLoader color={"#60B557"} loading={loading} size={100} />
             </div>
           )}
-          {documents?.length > 0 ? (
+          {documents.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
               {documents.map((document) => (
                 <div key={document.id}>
@@ -168,9 +201,15 @@ function Project() {
             </div>
           )}
         </div>
+        {loading && <p>Loading...</p>}
+        {hasMore && !loading && (
+          <button onClick={handleLoadMore}>Load More</button>
+        )}
+        {!hasMore && <p>No more documents to load.</p>}
         <ToastContainer />
       </div>
     </>
   );
 }
+
 export default Project;

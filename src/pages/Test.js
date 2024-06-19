@@ -1,328 +1,200 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
-
+import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { ClipLoader } from "react-spinners"; // import ClipLoader từ react-spinners
 import { ToastContainer, toast } from "react-toastify";
 
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  TelegramShareButton,
-  TwitterShareButton,
-} from "react-share";
-import {
-  EmailIcon,
-  FacebookIcon,
-  TelegramIcon,
-  TwitterIcon,
-} from "react-share";
-import RelatedDocuments from "../component/RelatedDocuments";
-import DocumentBody from "./DocumentBody";
-function DocumentDetail() {
-  const currentUrl = window.location.href;
-  const { documentId } = useParams();
-  const [document, setDocument] = useState(null);
-  const [subject, setSubject] = useState(null);
-  const [isBookmark, setIsBookmark] = useState(false);
-
+import ProjectCard from "../component/ProjectCard";
+function Project() {
+  const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [listDocuments, setListDocuments] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSearch, setPageSearch] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const hasFetchedOnce = useRef(false);
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const documentRes = await fetch(
-          `${API_BASE_URL}/api/Document/ById/${documentId}`
-        );
-        const documentData = await documentRes.json();
-        setDocument(documentData.data);
-
-        if (documentData.data?.idSubject) {
-          const [subjectRes, listDocumentsRes] = await Promise.all([
-            fetch(
-              `${API_BASE_URL}/api/Subject/ById/${documentData.data.idSubject}`
-            ),
-            fetch(
-              `${API_BASE_URL}/api/Document/ByIdSubject/${documentData.data.idSubject}`
-            ),
-          ]);
-
-          const subjectData = await subjectRes.json();
-          const listDocumentsData = await listDocumentsRes.json();
-
-          setSubject(subjectData.data);
-          setListDocuments(listDocumentsData.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchMode, setSearchMode] = useState(false);
+  const fetchDocuments = async (page) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/Document/ByType/DoAn?pageNumber=${page}&pageSize=3`
+      );
+      const result = await response.json();
+      if (result.data.length > 0) {
+        setDocuments((prevDocuments) => [...prevDocuments, ...result.data]);
+      } else {
+        setHasMore(false);
       }
-    };
-    const checkFollowStatus = async () => {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/BookmarkDocument?idDocument=${documentId}&idUser=${userId}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setIsBookmark(data?.status);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchSearch = async (searchText, page) => {
+    setLoading(true);
+    fetch(
+      `${API_BASE_URL}/api/Document/search?searchText=${searchText}&searchType=DoAn&pageNumber=${page}&pageSize=3`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status !== true) {
+          toast.error("Không thể tìm kiếm !");
         } else {
-          console.error("Error checking follow status:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error checking follow status:", error);
-      }
-    };
-
-    checkFollowStatus();
-    fetchData();
-  }, [documentId]);
-  const handleFollowSubject = async () => {
-    if (isBookmark) {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/BookmarkDocument?idDocument=${documentId}&idUser=${userId}`,
-          {
-            method: "DELETE",
-            headers: {
-              Accept: "*/*",
-              Authorization: `Bearer ${token}`,
-            },
+          if (data.data.length > 0) {
+            setDocuments((prevDocuments) => [...prevDocuments, ...data.data]);
+          } else {
+            setHasMore(false);
           }
-        );
-
-        if (response.ok) {
-          setIsBookmark(false);
-          toast.success("Hủy theo dõi thành công!");
-        } else if (response.status === 401 || response.status === 403) {
-          toast.warning("Vui lòng đăng nhập!");
-        } else {
-          toast.error("Đã xảy ra lỗi ");
+          toast.success("Tìm kiếm thành công !");
+          setLoading(false);
         }
-      } catch (error) {
-        toast.error("Đã xảy ra lỗi ");
+      })
+      .catch((error) => {
+        toast.error(error);
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    setSearchText("");
+    if (searchText.trim() === "") {
+      // fetchDocuments(pageNumber);
+      if (!hasFetchedOnce.current) {
+        fetchDocuments(pageNumber);
+        hasFetchedOnce.current = true;
       }
     } else {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/BookmarkDocument`, {
-          method: "POST",
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: 0,
-            idDocument: documentId,
-            idUser: userId,
-            status: 0,
-          }),
-        });
-
-        if (response.ok) {
-          setIsBookmark(true);
-          toast.success("Đã theo dõi thành công!");
-        } else if (response.status === 401 || response.status === 403) {
-          toast.warning("Vui lòng đăng nhập!");
-        } else {
-          toast.error("Đã xảy ra lỗi ");
-        }
-      } catch (error) {
-        toast.error("Đã xảy ra lỗi ");
+      fetchSearch(searchText, pageSearch);
+    }
+  }, []);
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      if (searchMode) {
+        const nextPage = pageSearch + 1;
+        setPageSearch(nextPage);
+        fetchSearch(searchText, nextPage);
+      } else {
+        const nextPage = pageNumber + 1;
+        setPageNumber(nextPage);
+        fetchDocuments(nextPage);
       }
     }
   };
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <ClipLoader size={100} color={"#00F5A2"} loading={loading} />
-      </div>
-    );
-  }
-
-  const copyToClipboard = () => {
-    const currentUrl = window.location.href;
-
-    navigator.clipboard
-      .writeText(currentUrl)
-      .then(() => {
-        toast.success("Sao chép đường link thành công !");
-      })
-      .catch((err) => {
-        toast.error("Không thể sao chép đường link !");
-      });
+  const handleSearch = () => {
+    const newSearchText = document.getElementById("query").value;
+    const pageSearchInit = 1;
+    setPageSearch(pageSearchInit);
+    setSearchText(newSearchText);
+    toast.success(searchText + "page: " + pageSearch);
+    setHasMore(true);
+    setSearchMode(true);
+    setDocuments([]);
+    fetchSearch(newSearchText, pageSearch);
   };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
-  };
-  const formattedDate = formatDate(document?.createDate);
-
   return (
     <>
-      <div className="container mx-auto p-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="md:col-span-2">
-            <h1
-              className="text-4xl  mb-4"
-              style={{ fontWeight: "600", color: "#0A0A0A" }}
-            >
-              📂{document?.title}
-            </h1>
-            <p
-              className="text-gray-800"
-              style={{ color: "#7A838C", fontSize: "17px" }}
-            >
-              Tải lên bởi{" "}
-              <span className="font-bold" style={{ color: "#48DA7D" }}>
-                {document?.nameAuthor}
-              </span>{" "}
-              vào <span>{formattedDate}</span>
-            </p>
-            <div className="flex flex-col md:flex-row justify-between mt-3 mb-3">
-              <div className="flex justify-center space-x-2 mb-3 md:mb-0">
-                <FacebookShareButton
-                  url={currentUrl}
-                  quote={"EduArchive"}
-                  hashtag="#EduArchive"
-                  className="text-center"
-                >
-                  <FacebookIcon size={32} round />
-                </FacebookShareButton>
-                <TwitterShareButton
-                  url={currentUrl}
-                  quote={"EduArchive"}
-                  hashtag="#EduArchive"
-                  className="text-center"
-                >
-                  <TwitterIcon size={32} round />
-                </TwitterShareButton>
-                <TelegramShareButton
-                  url={currentUrl}
-                  quote={"EduArchive"}
-                  hashtag="#EduArchive"
-                  className="text-center"
-                >
-                  <TelegramIcon size={32} round />
-                </TelegramShareButton>
-                <EmailShareButton
-                  url={currentUrl}
-                  quote={"EduArchive"}
-                  hashtag="#EduArchive"
-                  className="text-center"
-                >
-                  <EmailIcon size={32} round />
-                </EmailShareButton>
-              </div>
-              <div
-                className="flex justify-center space-x-2"
-                style={{ color: "#48DA7D" }}
-              >
-                <button
-                  onClick={copyToClipboard}
-                  className="font-bold py-2 px-3"
-                  style={{ fontSize: "26px" }}
-                >
-                  <i className="fa-solid fa-copy"></i>
-                </button>
-                <button
-                  className="font-bold py-2 px-3"
-                  style={{ fontSize: "26px" }}
-                  onClick={handleFollowSubject}
-                >
-                  {isBookmark ? (
-                    <i className="fa-solid fa-bookmark"></i>
-                  ) : (
-                    <i className="fa-regular fa-bookmark"></i>
-                  )}
-                </button>
-                <button
-                  className="font-bold py-2 px-3"
-                  style={{ fontSize: "26px" }}
-                >
-                  <i className="fa-solid fa-heart"></i> 0
-                </button>
-              </div>
-            </div>
-            <DocumentBody document={document} />
-
-            <div
-              id="alert-additional-content-3"
-              className="p-4 mt-8 mb-4 text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
-              role="alert"
-            >
-              <div className="flex items-center">
-                <svg
-                  className="flex-shrink-0 w-4 h-4 me-2"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                </svg>
-                <span className="sr-only">Info</span>
-                <h3 className="text-lg font-medium">
-                  Cảm ơn bạn đã download tài liệu của web !
-                </h3>
-              </div>
-              <div className="mt-2 mb-4 text-sm">
-                Các tài liệu được sưu tầm từ nhiều nguồn khác nhau. Nếu có bất
-                kỳ ý kiến nào vui lòng liên hệ theo thông tin bên dưới !
-              </div>
-              <div className="flex">
-                <button
-                  type="button"
-                  className="text-white bg-green-800 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                >
-                  <i
-                    class="fa-solid fa-envelope fa-lg"
-                    style={{ margin: "10px" }}
-                  ></i>
-                  nguyenduongthevi@gmail.com
-                </button>
-              </div>
+      <section className="bg-white py-[10px] dark:bg-dark ml-5">
+        <div className="px-4 sm:container flex flex-col sm:flex-row items-center justify-between">
+          <div className="w-full sm:w-auto flex justify-start sm:justify-start">
+            <div className="pl-5 border-l-4 border-green-500">
+              <h2 className="text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">
+                Đồ án ({documents?.length})
+              </h2>
             </div>
           </div>
-          <RelatedDocuments
-            subject={subject}
-            listDocuments={listDocuments}
-            documentId={documentId}
-          />
+          <div className="relative flex-1 max-w-xl mt-4 sm:mt-0 w-full sm:w-auto flex justify-end">
+            <div className="relative  max-w-xl" style={{ width: "100%" }}>
+              <input
+                placeholder="Tìm kiếm đồ án..."
+                className="rounded-full w-full h-16 bg-transparent py-1 pl-8 pr-10 outline-none border-2 border-gray-100 shadow-md hover:outline-none focus:ring-green-200 focus:border-green-200"
+                type="text"
+                name="query"
+                id="query"
+              />
+              <button
+                type="submit"
+                onClick={handleSearch}
+                className="absolute inline-flex items-center h-10 px-4 py-2 text-sm text-white transition duration-150 ease-in-out rounded-full outline-none right-3 top-3 bg-green-400 sm:px-6 sm:text-base sm:font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <svg
+                  className="-ml-0.5 sm:-ml-1 mr-2 w-4 h-4 sm:h-5 sm:w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                Search
+              </button>
+            </div>
+          </div>
         </div>
+      </section>
+
+      <div style={{ marginLeft: "20px", marginRight: "20px" }}>
+        <div style={{ position: "relative" }}>
+          {loading && (
+            <div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "rgba(255, 255, 255, 0.5)", // Màu mờ
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999, // Đảm bảo lớp mờ nằm phía trên
+              }}
+            >
+              <ClipLoader color={"#60B557"} loading={loading} size={100} />
+            </div>
+          )}
+          {documents?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
+              {documents.map((document) => (
+                <div key={document.id}>
+                  <Link to={`/project/${document.id}`}>
+                    <ProjectCard document={document} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div
+              className="flex items-center justify-center "
+              style={{ margin: "20px" }}
+            >
+              <div className="text-center">
+                <p
+                  className="text-lg font-bold mb-2"
+                  style={{ fontSize: "30px", color: "#70DE92" }}
+                >
+                  Không tìm thấy đồ án !
+                </p>
+                <p className="text-gray-600">
+                  Xin lỗi, hiện tại chưa có đồ án nào. Vui lòng quay trở lại sau
+                  !
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+        {loading && <p>Loading...</p>}
+        {hasMore && !loading && (
+          <button onClick={handleLoadMore}>Load More</button>
+        )}
+        {!hasMore && <p>No more documents to load.</p>}
         <ToastContainer />
       </div>
     </>
   );
 }
-
-export default DocumentDetail;
+export default Project;
