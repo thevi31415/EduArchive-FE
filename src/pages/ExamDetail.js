@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import GoogleDriveViewer from "../component/GoogleDriveViewer";
-import GoogleDriveDownloader from "./GoogleDriveDownloader";
+import GoogleDriveDownloader from "../component/GoogleDriveDownloader";
+
 import { ToastContainer, toast } from "react-toastify";
 import RelatedDocuments from "../component/RelatedDocuments";
 import { Tooltip } from "react-tooltip";

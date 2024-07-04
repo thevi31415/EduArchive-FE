@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleDriveViewer from "../component/GoogleDriveViewer";
-import GoogleDriveDownloader from "./GoogleDriveDownloader";
+import GoogleDriveDownloader from "../component/GoogleDriveDownloader";
+
 const DocumentBody = ({ document }) => {
   return (
     <div>
